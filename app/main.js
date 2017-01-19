@@ -38,7 +38,7 @@ class mainScreen extends Component {
     }).then((response) => response.json())
         .then((responseJson) => {
           if (responseJson.success) {
-            Actions.profile();
+            Actions.profile({userId:responseJson.id});
           } else {
             alert('Wrong username or password!!!');
           }
@@ -70,9 +70,11 @@ class mainScreen extends Component {
                     </TouchableHighlight>  
             </View>
             )}
+          {renderIf(!this.state.showLoginForm, 
           <TouchableHighlight onPress={()=>this.loginFormToggle()} style={styles.Button}>
             <Text style={{color:'white',textAlign:'center'}}>Sign in</Text>
-          </TouchableHighlight>      
+          </TouchableHighlight>    
+          )}  
       </View>
     );
   }

@@ -5,16 +5,17 @@ import {
   View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-const profileScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.welcome}
-      onPress={Actions.main} 
-      >
-        Profile Screen
-      </Text>
-    </View>
-  );
+class profileScreen extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.welcome}
+        onPress={Actions.main} 
+        >Hello, {this.props.userId}
+        </Text>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
