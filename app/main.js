@@ -14,6 +14,7 @@ class mainScreen extends Component {
    constructor(props) {
     super(props);
     this.state = {showLoginForm: false,
+        showRegisterForm:false,
         login:'',
         password:''
     };
@@ -21,7 +22,11 @@ class mainScreen extends Component {
   loginFormToggle() {
      this.setState({
         showLoginForm: true,
-
+    });
+  }
+  registerFormToggle() {
+     this.setState({
+        showRegisterForm: true,
     });
   }
   goLogin() {
@@ -52,6 +57,11 @@ class mainScreen extends Component {
       <View style={styles.container}>
           <View style={styles.Mask}></View>
           <Image style={styles.background} source={require('../img/intro.jpg')}/>
+          {renderIf(this.state.showRegisterForm,
+              <View style={styles.loginForm}>
+                <Text style={styles.text}>Register</Text>
+              </View>
+            )}
           {renderIf(this.state.showLoginForm, 
             <View style={styles.loginForm}>
                     <Text style={styles.text}>Login</Text>
@@ -70,10 +80,15 @@ class mainScreen extends Component {
                     </TouchableHighlight>  
             </View>
             )}
-          {renderIf(!this.state.showLoginForm, 
-          <TouchableHighlight onPress={()=>this.loginFormToggle()} style={styles.Button}>
-            <Text style={{color:'white',textAlign:'center'}}>Sign in</Text>
-          </TouchableHighlight>    
+          {renderIf(!this.state.showLoginForm&&!this.state.showRegisterForm, 
+            <View>
+              <TouchableHighlight underlayColor="white" onPress={()=>this.loginFormToggle()} style={styles.Button}>
+                <Text style={{color:'white',textAlign:'center'}}>Sign in</Text>
+              </TouchableHighlight>    
+              <TouchableHighlight underlayColor="white" onPress={()=>this.registerFormToggle()} style={styles.Button}>
+                <Text style={{color:'white',textAlign:'center'}}>Sign up</Text>
+              </TouchableHighlight>    
+          </View>
           )}  
       </View>
     );
@@ -115,7 +130,8 @@ const styles = StyleSheet.create({
     padding:10,
     zIndex:2,
     width:200,
-    height:40
+    height:40,
+    marginBottom:10
   },
   text:{
     fontSize:18,
