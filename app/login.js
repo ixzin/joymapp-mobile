@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
+  AsyncStorage,
   TouchableHighlight,
   TextInput,
   Image,
@@ -19,16 +20,6 @@ class loginScreen extends Component {
         password:''
     };
   }
-  loginFormToggle() {
-     this.setState({
-        showLoginForm: true,
-    });
-  }
-  registerFormToggle() {
-     this.setState({
-        showRegisterForm: true,
-    });
-  }
   goLogin() {
     return fetch('http://teethemes.com:3000/api/authentication',{
     method: 'POST',
@@ -43,6 +34,11 @@ class loginScreen extends Component {
     }).then((response) => response.json())
         .then((responseJson) => {
           if (responseJson.success) {
+            try {
+              AsyncStorage.setItem('userLogged',true);
+            } catch (error) {
+              console.error(error);
+            }
             Actions.main({userId:responseJson.id});
           } else {
             alert('Wrong username or password!!!');
@@ -62,7 +58,6 @@ class loginScreen extends Component {
                 <Text style={styles.text}>Register</Text>
               </View>
             )}
-          {renderIf(this.state.showLoginForm, 
             <View style={styles.loginForm}>
                     <Text style={styles.text}>Login</Text>
                     <TextInput
@@ -79,17 +74,6 @@ class loginScreen extends Component {
                         <Text style={{color:'white',textAlign:'center'}}>Sign in</Text>
                     </TouchableHighlight>  
             </View>
-            )}
-          {renderIf(!this.state.showLoginForm&&!this.state.showRegisterForm, 
-            <View>
-              <TouchableHighlight underlayColor="white" onPress={()=>this.loginFormToggle()} style={styles.Button}>
-                <Text style={{color:'white',textAlign:'center'}}>Sign in</Text>
-              </TouchableHighlight>    
-              <TouchableHighlight underlayColor="white" onPress={()=>this.registerFormToggle()} style={styles.Button}>
-                <Text style={{color:'white',textAlign:'center'}}>Sign up</Text>
-              </TouchableHighlight>    
-          </View>
-          )}  
       </View>
     );
   }

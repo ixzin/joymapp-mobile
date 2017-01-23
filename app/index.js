@@ -5,6 +5,7 @@ import mainScreen from './main';
 import {
   StyleSheet,
   Text,
+  AsyncStorage,
   View
 } from 'react-native';
 
@@ -25,9 +26,18 @@ const scenes=Actions.create(
         />
       </Scene>
 );
-const App = () => {
-  return <Router 
-  scenes={scenes}/>
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLogged:false
+    }
+  }
+  render() {
+    console.log(this.state.isLogged);
+    return <Router 
+    scenes={scenes}/>
+  }
 }
 
 const styles = StyleSheet.create({
