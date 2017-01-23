@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Actions,Router, Scene } from 'react-native-router-flux';
+import loginScreen from './login';
 import mainScreen from './main';
-import profileScreen from './profile';
 import {
   StyleSheet,
   Text,
@@ -11,16 +11,16 @@ import {
 
 const scenes=Actions.create(
   <Scene key="root">
-        <Scene key="main"
+        <Scene key="login"
           hideNavBar={true}
-          component={mainScreen}
+          component={loginScreen}
           title="main"
           initial
         />
         <Scene
-          key="profile"
+          key="main"
           hideNavBar={true}
-          component={profileScreen}
+          component={mainScreen}
           title="profile"
         />
       </Scene>
