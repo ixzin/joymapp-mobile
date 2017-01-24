@@ -35,7 +35,7 @@ class loginScreen extends Component {
         .then((responseJson) => {
           if (responseJson.success) {
             try {
-              AsyncStorage.setItem('userLogged',true);
+              AsyncStorage.setItem('userId',responseJson.id);
             } catch (error) {
               console.error(error);
             }

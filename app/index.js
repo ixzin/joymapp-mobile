@@ -15,26 +15,26 @@ const scenes=Actions.create(
         <Scene key="login"
           hideNavBar={true}
           component={loginScreen}
-          title="main"
+          title="login"
           initial
         />
         <Scene
           key="main"
           hideNavBar={true}
           component={mainScreen}
-          title="profile"
+          title="main"
         />
       </Scene>
 );
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isLogged:false
-    }
+    AsyncStorage.getItem("userId").then((value) => {
+      console.log(value);
+    }).done();
   }
   render() {
-    console.log(this.state.isLogged);
+    //console.log(this.state.user);
     return <Router 
     scenes={scenes}/>
   }
