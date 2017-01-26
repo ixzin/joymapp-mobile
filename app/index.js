@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Actions,Router, Scene } from 'react-native-router-flux';
+import  introScreen from './intro';
 import loginScreen from './login';
 import mainScreen from './main';
+
 import {
   StyleSheet,
   Text,
@@ -10,13 +12,37 @@ import {
 } from 'react-native';
 
 
-const scenes=Actions.create(
-  <Scene key="root">
+class App extends Component {
+    componentWillMount(){
+        self = this;
+        AsyncStorage.getItem('userId')
+        .then( (value) =>{
+            if (value != null){
+              this.setState({
+                logged: true,
+                user:value
+              });
+            } else{
+              this.setState({
+                logged: false,
+              })
+            }
+          }
+        );
+  };
+
+  render() {
+    return (<Router>
+      <Scene key="root">
+      <Scene key="intro"
+          hideNavBar={true}
+          component={introScreen}
+          title="intro"
+        />
         <Scene key="login"
           hideNavBar={true}
           component={loginScreen}
           title="login"
-          initial
         />
         <Scene
           key="main"
@@ -25,18 +51,8 @@ const scenes=Actions.create(
           title="main"
         />
       </Scene>
-);
-class App extends Component {
-  constructor(props) {
-    super(props);
-    AsyncStorage.getItem("userId").then((value) => {
-      console.log(value);
-    }).done();
-  }
-  render() {
-    //console.log(this.state.user);
-    return <Router 
-    scenes={scenes}/>
+      </Router>
+      )
   }
 }
 
