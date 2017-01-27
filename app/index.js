@@ -33,24 +33,24 @@ class App extends Component {
 
   render() {
     return (<Router>
-      <Scene key="root">
-      <Scene key="intro"
-          hideNavBar={true}
-          component={introScreen}
-          title="intro"
-        />
-        <Scene key="login"
-          hideNavBar={true}
-          component={loginScreen}
-          title="login"
-        />
-        <Scene
-          key="main"
-          hideNavBar={true}
-          component={mainScreen}
-          title="main"
-        />
-      </Scene>
+        <Scene key="root">
+        <Scene key="intro"
+            hideNavBar={true}
+            component={introScreen}
+            title="intro"
+          />
+          <Scene key="login"
+            hideNavBar={true}
+            component={loginScreen}
+            title="login"
+          />
+          <Scene
+            key="main"
+            hideNavBar={true}
+            component={mainScreen}
+            title="main"
+          />
+        </Scene>
       </Router>
       )
   }

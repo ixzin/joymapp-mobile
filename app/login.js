@@ -10,6 +10,7 @@ import {
 } 
 from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import Icon from './icon'; 
 import renderIf from './renderif';
 class loginScreen extends Component {
    constructor(props) {
@@ -53,6 +54,7 @@ class loginScreen extends Component {
       <View style={styles.container}>
           <View style={styles.Mask}></View>
           <Image style={styles.background} source={require('../img/intro.jpg')}/>
+          <Icon name="SortArrows" height="20" width="20" />
           {renderIf(this.state.showRegisterForm,
               <View style={styles.loginForm}>
                 <Text style={styles.text}>Register</Text>
