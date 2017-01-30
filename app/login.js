@@ -54,12 +54,6 @@ class loginScreen extends Component {
       <View style={styles.container}>
           <View style={styles.Mask}></View>
           <Image style={styles.background} source={require('../img/intro.jpg')}/>
-          <Icon name="SortArrows" height="20" width="20" />
-          {renderIf(this.state.showRegisterForm,
-              <View style={styles.loginForm}>
-                <Text style={styles.text}>Register</Text>
-              </View>
-            )}
             <View style={styles.loginForm}>
                     <Text style={styles.text}>Login</Text>
                     <TextInput
@@ -75,6 +69,29 @@ class loginScreen extends Component {
                      <TouchableHighlight onPress={()=>this.goLogin()} style={styles.Button}>
                         <Text style={{color:'white',textAlign:'center'}}>Sign in</Text>
                     </TouchableHighlight>  
+                    <Text style={{color:'white',marginTop:10,marginBottom:10}}>OR</Text>
+                    <TouchableHighlight onPress={()=>this.goLogin()} style={styles.facebookButton}>
+                       <View>
+                        <Icon name="Facebook" width="20" height="20" fill="#fff"/>
+                        <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Facebook login</Text>
+                        </View>
+                    </TouchableHighlight>  
+                    <TouchableHighlight onPress={()=>this.goLogin()} style={styles.googleButton}>
+                       <View>
+                        <Icon name="Google" width="20" height="20" fill="#fff"/>
+                        <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Google login</Text>
+                        </View>
+                    </TouchableHighlight>  
+                     <View style={styles.bottomLinks}>
+                      <Text style={{color: 'white', alignSelf: 'flex-start'}}
+                          onPress={() => Linking.openURL('http://google.com')}>
+                      Google
+                      </Text>
+                      <Text style={{color: 'white', alignSelf: 'flex-end'}}
+                          onPress={() => Linking.openURL('http://google.com')}>
+                      Google
+                      </Text>
+                  </View>
             </View>
       </View>
     );
@@ -116,8 +133,23 @@ const styles = StyleSheet.create({
     padding:10,
     zIndex:2,
     width:200,
-    height:40,
-    marginBottom:10
+    height:40
+  },
+  facebookButton:{
+      backgroundColor:'#3b5998',
+      padding:10,
+      zIndex:2,
+      width:200,
+      height:40,
+      marginBottom:10
+  },
+  googleButton:{
+      backgroundColor:'#d34836',
+      padding:10,
+      zIndex:2,
+      width:200,
+      height:40,
+      marginBottom:10
   },
   text:{
     fontSize:18,
@@ -136,6 +168,9 @@ const styles = StyleSheet.create({
     textAlign:'left',
     marginTop:0,
     marginBottom:10
+  },
+  bottomLinks:{
+
   }
 });
 
