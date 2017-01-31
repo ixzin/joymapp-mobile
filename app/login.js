@@ -55,14 +55,17 @@ class loginScreen extends Component {
           <View style={styles.Mask}></View>
           <Image style={styles.background} source={require('../img/intro.jpg')}/>
             <View style={styles.loginForm}>
-                    <Text style={styles.text}>Login</Text>
+                    <Text style={styles.header}>Titile</Text>
                     <TextInput
                       style={styles.input}
+                      placeholder="Login"
+                      placeholderTextColor="white"
                       onChangeText={(login) => this.setState({login})}
                     />
-                    <Text style={styles.text}>Password</Text>
                     <TextInput
                       style={styles.input}
+                      placeholder="Password"
+                      placeholderTextColor="white"
                       secureTextEntry={true} 
                       onChangeText={(password) => this.setState({password})}
                     />
@@ -82,17 +85,18 @@ class loginScreen extends Component {
                         <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Google login</Text>
                         </View>
                     </TouchableHighlight>  
-                     <View style={styles.bottomLinks}>
-                      <Text style={{color: 'white', alignSelf: 'flex-start'}}
-                          onPress={() => Linking.openURL('http://google.com')}>
-                      Google
-                      </Text>
-                      <Text style={{color: 'white', alignSelf: 'flex-end'}}
-                          onPress={() => Linking.openURL('http://google.com')}>
-                      Google
-                      </Text>
-                  </View>
+            
+                     
+               
             </View>
+             <Text style={{color: 'white', position: 'absolute',bottom:10,left:20,zIndex:3}}
+                          onPress={() => Linking.openURL('http://google.com')}>
+                      Register
+                      </Text>
+                      <Text style={{color: 'white', position: 'absolute',bottom:10,right:20,zIndex:3}}
+                          onPress={() => Linking.openURL('http://google.com')}>
+                      Forgot password
+            </Text>
       </View>
     );
   }
@@ -112,7 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor:'black',
     position:'absolute',
     top:0,left:0,right:0,bottom:0,
-    opacity:0.5,
+    opacity:0.75,
     zIndex:1
   },
   container: {
@@ -151,25 +155,21 @@ const styles = StyleSheet.create({
       height:40,
       marginBottom:10
   },
-  text:{
-    fontSize:18,
-    color:'white',
-    minWidth:200,
-    textAlign:'left',
-    marginTop:0,
-    marginBottom:0
-  },
   input:{
     color:'white',
-    height:30,
+    height:40,
     borderBottomWidth:2,
     minWidth:200,
     borderColor:'white',
     textAlign:'left',
+    fontSize:18,
     marginTop:0,
     marginBottom:10
   },
-  bottomLinks:{
+  header:{
+    fontSize:28,
+    marginBottom:20,
+    color:'white'
 
   }
 });
