@@ -90,7 +90,7 @@ class loginScreen extends Component {
                
             </View>
              <Text style={{color: 'white', position: 'absolute',bottom:10,left:20,zIndex:3}}
-                          onPress={() => Linking.openURL('http://google.com')}>
+                          onPress={() =>Actions.register()}>
                       Register
                       </Text>
                       <Text style={{color: 'white', position: 'absolute',bottom:10,right:20,zIndex:3}}

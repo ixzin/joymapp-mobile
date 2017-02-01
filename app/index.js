@@ -3,6 +3,7 @@ import { Actions,Router, Scene } from 'react-native-router-flux';
 import  introScreen from './intro';
 import loginScreen from './login';
 import mainScreen from './main';
+import registerScreen from './register';
 
 import {
   StyleSheet,
@@ -42,8 +43,13 @@ class App extends Component {
           <Scene key="login"
             hideNavBar={true}
             component={loginScreen}
-            title="login"
-          />
+            title="login"/>
+             <Scene key="register"
+              hideNavBar={true}
+              schema="modal"
+              component={registerScreen}
+              title="register"
+             />
           <Scene
             key="main"
             hideNavBar={true}
