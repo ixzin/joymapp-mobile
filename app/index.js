@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { Actions,Router, Scene } from 'react-native-router-flux';
-import  introScreen from './intro';
-import loginScreen from './login';
-import mainScreen from './main';
-import registerScreen from './register';
+import  scenes from './scenes';
+
 
 import {
   StyleSheet,
@@ -14,51 +12,10 @@ import {
 
 
 class App extends Component {
-    componentWillMount(){
-        self = this;
-        AsyncStorage.getItem('userId')
-        .then( (value) =>{
-            if (value != null){
-              this.setState({
-                logged: true,
-                user:value
-              });
-            } else{
-              this.setState({
-                logged: false,
-              })
-            }
-          }
-        );
-  };
-
   render() {
-    return (<Router>
-        <Scene key="root">
-        <Scene key="intro"
-            hideNavBar={true}
-            component={introScreen}
-            title="intro"
-          />
-          <Scene key="login"
-            hideNavBar={true}
-            component={loginScreen}
-            title="login"/>
-             <Scene key="register"
-              hideNavBar={true}
-              schema="modal"
-              component={registerScreen}
-              title="register"
-             />
-          <Scene
-            key="main"
-            hideNavBar={true}
-            component={mainScreen}
-            title="main"
-          />
-        </Scene>
-      </Router>
-      )
+    return(
+      <Router scenes={scenes}/>
+    );
   }
 }
 

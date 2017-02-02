@@ -12,6 +12,7 @@ from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from './icon'; 
 import renderIf from './renderif';
+import  mainStyles from './styles';
 class loginScreen extends Component {
    constructor(props) {
     super(props);
@@ -51,11 +52,11 @@ class loginScreen extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
-          <View style={styles.Mask}></View>
-          <Image style={styles.background} source={require('../img/intro.jpg')}/>
+      <View style={mainStyles.container}>
+          <View style={mainStyles.Mask}></View>
+          <Image style={mainStyles.background} source={require('../img/intro.jpg')}/>
             <View style={styles.loginForm}>
-                    <Text style={styles.header}>Titile</Text>
+                    <Text style={mainStyles.header}>Titile</Text>
                     <TextInput
                       style={styles.input}
                       placeholder="Login"
@@ -103,28 +104,6 @@ class loginScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  background:{
-    flex:1,
-    position:'absolute',
-    zIndex:0,
-    top:0,
-    bottom:0,
-    right:0,
-    left:0
-  },
-  Mask:{
-    backgroundColor:'black',
-    position:'absolute',
-    top:0,left:0,right:0,bottom:0,
-    opacity:0.75,
-    zIndex:1
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#bb0000',
-  },
   loginForm:{
      flex: 1,
      flexDirection: 'column',
@@ -165,12 +144,6 @@ const styles = StyleSheet.create({
     fontSize:18,
     marginTop:0,
     marginBottom:10
-  },
-  header:{
-    fontSize:28,
-    marginBottom:20,
-    color:'white'
-
   }
 });
 
