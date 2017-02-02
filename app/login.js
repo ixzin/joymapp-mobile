@@ -16,8 +16,7 @@ import  mainStyles from './styles';
 class loginScreen extends Component {
    constructor(props) {
     super(props);
-    this.state = {showLoginForm: false,
-        showRegisterForm:false,
+    this.state = {
         login:'',
         password:''
     };
