@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import  mainStyles from './styles';
+
 class registerScreen extends Component {
   constructor(props) {
     super(props);
@@ -24,9 +25,9 @@ class registerScreen extends Component {
     return (
       <View style={mainStyles.container}>
       <View style={mainStyles.Mask}></View>
-          <Image style={mainStyles.background} source={require('../img/intro.jpg')}/>
-            <View style={styles.registerForm}>
+          <Image style={mainStyles.background} source={require('../img/intro.jpg')}/>         
             <Text style={mainStyles.header}>Register</Text>
+             <View style={styles.registerForm}>
               <View style={styles.formRow}>
                     <TextInput
                       style={styles.input}
@@ -36,36 +37,32 @@ class registerScreen extends Component {
                     />
                     <TextInput
                       style={styles.input}
-                      placeholder="Login"
-                      placeholderTextColor="white"
-                      onChangeText={(login) => this.setState({login})}
-                    />
-                </View>    
-                <View style={styles.formRow}>
-                    <TextInput
-                      style={styles.input}
                       placeholder="Password"
                       placeholderTextColor="white"
                       secureTextEntry={true} 
                       onChangeText={(password) => this.setState({password})}
                     />
-
                      <TextInput
-                      style={styles.input}
-                      placeholder="Confirm password"
-                      placeholderTextColor="white"
-                      secureTextEntry={true} 
-                      onChangeText={(passwordConfirm) => this.setState({passwordConfirm})}
-                    />
-                </View>
-                <View style={styles.formRow}>    
-                    <TextInput
                       style={styles.input}
                       placeholder="First name"
                       placeholderTextColor="white"
-                      secureTextEntry={true} 
                       onChangeText={(firstname) => this.setState({firstname})}
                     />
+                </View>    
+                <View style={styles.formRow}>
+                 <TextInput
+                      style={styles.input}
+                      placeholder="Login"
+                      placeholderTextColor="white"
+                      onChangeText={(login) => this.setState({login})}
+                    />
+                     <TextInput
+                      style={styles.input}
+                      placeholder="Confirm"
+                      placeholderTextColor="white"
+                      secureTextEntry={true} 
+                      onChangeText={(passwordConfirm) => this.setState({passwordConfirm})}
+                    />             
                     <TextInput
                       style={styles.input}
                       placeholder="Last name"
@@ -80,14 +77,16 @@ class registerScreen extends Component {
 }
 const styles = StyleSheet.create({
   registerForm:{
-     flex: 4,
-     flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    height:50,
     zIndex:2
   },
   formRow:{
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex:2
   },
   input:{
     color:'white',
@@ -96,6 +95,7 @@ const styles = StyleSheet.create({
     minWidth:120,
     borderColor:'white',
     textAlign:'left',
+    marginRight:10,
     fontSize:18
   }
 });

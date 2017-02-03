@@ -29,7 +29,9 @@ const mainStyles = StyleSheet.create({
 	  header:{
 	    fontSize:28,
 	    marginBottom:20,
-	    color:'white'
+	    color:'white',
+	    height:60,
+	    zIndex:3
 	  }
  });
 
