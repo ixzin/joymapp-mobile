@@ -20,8 +20,18 @@ class registerScreen extends Component {
         birthday:''
     };
    }
+    validate= (arg,length)=> {
+      if (!arg||arg.length<length) 
+        return false;
+      if (arg==this.state.password) 
+          return this.state.password==this.state.passwordConfirm?true:false;
+      if (arg==this.state.email) {
+        let regex='/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/';
+        return arg.replace(regex,'').length>0?true:false;
+      }
+   }
    register() {
-    if (this.state.password&&this.state.passwordConfirm&&this.state.firstname&&this.state.lastname) {
+    if (this.validate(this.state.password,4)&&this.validate(this.state.firstname,3)&&this.validate(this.state.lastname,3)&&this.validate(this.state.email,6)) {
         let userInfo={
           email:this.state.email,
           username:this.state.login,
@@ -70,10 +80,11 @@ class registerScreen extends Component {
                <View style={styles.registerForm}>
                 <View style={styles.formFirstRow}>
                       <TextInput
-                        style={styles.input}
+                        style={this.state.erroEmail?styles.error:styles.input}
                         placeholder="Email"
                         placeholderTextColor="white"
                         onChangeText={(email) => this.setState({email})}
+                        onBlur={(email) => {this.setState({erroEmail: this.validate(this.state.email)})}}
                       />
                       <TextInput
                         style={styles.input}
@@ -170,7 +181,17 @@ const styles = StyleSheet.create({
     minWidth:120,
     borderColor:'white',
     textAlign:'left',
-    fontSize:18
+    fontSize:14
+  },
+  error:{
+    color:'red',
+    height:40,
+    borderBottomWidth:2,
+    minWidth:120,
+    borderColor:'red',
+    textAlign:'left',
+    fontSize:14
+
   },
   Button:{
     backgroundColor:'#ea2e49',
