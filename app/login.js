@@ -5,6 +5,8 @@ import {
   AsyncStorage,
   TouchableHighlight,
   TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
   Image,
   View
 } 
@@ -51,53 +53,55 @@ class loginScreen extends Component {
   }
   render() {
     return (
-      <View style={mainStyles.container}>
-          <View style={mainStyles.Mask}></View>
-          <Image style={mainStyles.background} source={require('../img/intro.jpg')}/>
-            <View style={styles.loginForm}>
-                    <Text style={mainStyles.header}>Titile</Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Login"
-                      placeholderTextColor="white"
-                      onChangeText={(login) => this.setState({login})}
-                    />
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Password"
-                      placeholderTextColor="white"
-                      secureTextEntry={true} 
-                      onChangeText={(password) => this.setState({password})}
-                    />
-                     <TouchableHighlight onPress={()=>this.goLogin()} style={mainStyles.Button}>
-                        <Text style={{color:'white',textAlign:'center'}}>Sign in</Text>
-                    </TouchableHighlight>  
-                    <Text style={{color:'white',marginTop:10,marginBottom:10}}>OR</Text>
-                    <TouchableHighlight onPress={()=>this.goLogin()} style={styles.facebookButton}>
-                       <View>
-                        <Icon name="Facebook" width="20" height="20" fill="#fff"/>
-                        <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Facebook login</Text>
-                        </View>
-                    </TouchableHighlight>  
-                    <TouchableHighlight onPress={()=>this.goLogin()} style={styles.googleButton}>
-                       <View>
-                        <Icon name="Google" width="20" height="20" fill="#fff"/>
-                        <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Google login</Text>
-                        </View>
-                    </TouchableHighlight>  
-            
-                     
-               
-            </View>
-             <Text style={{color: 'white', position: 'absolute',bottom:10,left:20,zIndex:3}}
-                          onPress={() =>Actions.register()}>
-                      Register
-                      </Text>
-                      <Text style={{color: 'white', position: 'absolute',bottom:10,right:20,zIndex:3}}
-                          onPress={() => Linking.openURL('http://google.com')}>
-                      Forgot password
-            </Text>
-      </View>
+      <TouchableWithoutFeedback onPress={ () => { Keyboard.dismiss() } }>
+          <View style={mainStyles.container}>
+              <View style={mainStyles.Mask}></View>
+              <Image style={mainStyles.background} source={require('../img/intro.jpg')}/>
+                <View style={styles.loginForm}>
+                        <Text style={mainStyles.header}>Titile</Text>
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Login"
+                          placeholderTextColor="white"
+                          onChangeText={(login) => this.setState({login})}
+                        />
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Password"
+                          placeholderTextColor="white"
+                          secureTextEntry={true} 
+                          onChangeText={(password) => this.setState({password})}
+                        />
+                         <TouchableHighlight onPress={()=>this.goLogin()} style={mainStyles.Button}>
+                            <Text style={{color:'white',textAlign:'center'}}>Sign in</Text>
+                        </TouchableHighlight>  
+                        <Text style={{color:'white',marginTop:10,marginBottom:10}}>OR</Text>
+                        <TouchableHighlight onPress={()=>this.goLogin()} style={styles.facebookButton}>
+                           <View>
+                            <Icon name="Facebook" width="20" height="20" fill="#fff"/>
+                            <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Facebook login</Text>
+                            </View>
+                        </TouchableHighlight>  
+                        <TouchableHighlight onPress={()=>this.goLogin()} style={styles.googleButton}>
+                           <View>
+                            <Icon name="Google" width="20" height="20" fill="#fff"/>
+                            <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Google login</Text>
+                            </View>
+                        </TouchableHighlight>  
+                
+                         
+                   
+                </View>
+                 <Text style={{color: 'white', position: 'absolute',bottom:10,left:20,zIndex:3}}
+                              onPress={() =>Actions.register()}>
+                          Register
+                          </Text>
+                          <Text style={{color: 'white', position: 'absolute',bottom:10,right:20,zIndex:3}}
+                              onPress={() => Linking.openURL('http://google.com')}>
+                          Forgot password
+                </Text>
+          </View>
+        </TouchableWithoutFeedback>
     );
   }
 }

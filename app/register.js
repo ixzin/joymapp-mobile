@@ -4,6 +4,8 @@ import {
   Text,
   Image,
   TouchableHighlight,
+  TouchableWithoutFeedback,
+    Keyboard,
   TextInput,
   View
 } from 'react-native';
@@ -41,7 +43,6 @@ class registerScreen extends Component {
           })
           }).then((response) => response.json())
               .then((responseJson) => {
-                console.log(responseJson);
                 if (responseJson.success) {
                   try {
                   } catch (error) {
@@ -61,83 +62,85 @@ class registerScreen extends Component {
    }
   render() {
     return (
-      <View style={mainStyles.container}>
-      <View style={mainStyles.Mask}></View>
-          <Image style={mainStyles.background} source={require('../img/intro.jpg')}/>         
-            <Text style={mainStyles.header}>Register</Text>
-             <View style={styles.registerForm}>
-              <View style={styles.formFirstRow}>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Email"
-                      placeholderTextColor="white"
-                      onChangeText={(email) => this.setState({email})}
-                    />
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Password"
-                      placeholderTextColor="white"
-                      secureTextEntry={true} 
-                      onChangeText={(password) => this.setState({password})}
-                    />
-                     <TextInput
-                      style={styles.input}
-                      placeholder="First name"
-                      placeholderTextColor="white"
-                      onChangeText={(firstname) => this.setState({firstname})}
-                    />
-                    
-                </View>    
-                <View style={styles.formSecondRow}>
-                 <TextInput
-                      style={styles.input}
-                      placeholder="Login"
-                      placeholderTextColor="white"
-                      onChangeText={(login) => this.setState({login})}
-                    />
-                     <TextInput
-                      style={styles.input}
-                      placeholder="Confirm"
-                      placeholderTextColor="white"
-                      secureTextEntry={true} 
-                      onChangeText={(passwordConfirm) => this.setState({passwordConfirm})}
-                    />             
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Last name"
-                      placeholderTextColor="white"
-                      onChangeText={(lastname) => this.setState({lastname})}
-                    />
-                   
-                </View>    
-            </View>
-            <DatePicker
-                      style={{width: 150,zIndex:4,marginBottom:10, marginTop:10}}
-                      date={this.state.birthday}
-                      mode="date"
-                      placeholder='birthday'
-                      format="YYYY-MM-DD"
-                      minDate="1950-01-01"
-                      maxDate="2000-01-01"
-                      confirmBtnText="Confirm"
-                      cancelBtnText="Cancel"
-                      showIcon={false}
-                      customStyles={{
-                        dateInput: {
-                          borderBottomColor :'white',
-                          borderBottomWidth:2,
-                          borderRightWidth:0,
-                          borderTopWidth:0,
-                          borderLeftWidth:0,
-                        }
-                      }}
-                      onDateChange={(birthday) => {this.setState({birthday: birthday})}}
-                    />
-                     <TouchableHighlight onPress={()=>this.register()} style={mainStyles.Button}>
-                        <Text style={{color:'white',textAlign:'center'}}>Create account</Text>
-                    </TouchableHighlight>  
-                    <Text onPress={() =>Actions.login()} style={{color:'white',textAlign:'center',zIndex:3,marginTop:10}}>Already have account</Text>
-      </View>
+    <TouchableWithoutFeedback onPress={ () => { Keyboard.dismiss() } }>
+        <View style={mainStyles.container}>
+            <View style={mainStyles.Mask}></View>
+            <Image style={mainStyles.background} source={require('../img/intro.jpg')}/>         
+              <Text style={mainStyles.header}>Register</Text>
+               <View style={styles.registerForm}>
+                <View style={styles.formFirstRow}>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Email"
+                        placeholderTextColor="white"
+                        onChangeText={(email) => this.setState({email})}
+                      />
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Password"
+                        placeholderTextColor="white"
+                        secureTextEntry={true} 
+                        onChangeText={(password) => this.setState({password})}
+                      />
+                       <TextInput
+                        style={styles.input}
+                        placeholder="First name"
+                        placeholderTextColor="white"
+                        onChangeText={(firstname) => this.setState({firstname})}
+                      />
+                      
+                  </View>    
+                  <View style={styles.formSecondRow}>
+                   <TextInput
+                        style={styles.input}
+                        placeholder="Login"
+                        placeholderTextColor="white"
+                        onChangeText={(login) => this.setState({login})}
+                      />
+                       <TextInput
+                        style={styles.input}
+                        placeholder="Confirm"
+                        placeholderTextColor="white"
+                        secureTextEntry={true} 
+                        onChangeText={(passwordConfirm) => this.setState({passwordConfirm})}
+                      />             
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Last name"
+                        placeholderTextColor="white"
+                        onChangeText={(lastname) => this.setState({lastname})}
+                      />
+                     
+                  </View>    
+              </View>
+              <DatePicker
+                        style={{width: 150,zIndex:4,marginBottom:10, marginTop:10}}
+                        date={this.state.birthday}
+                        mode="date"
+                        placeholder='birthday'
+                        format="YYYY-MM-DD"
+                        minDate="1950-01-01"
+                        maxDate="2000-01-01"
+                        confirmBtnText="Confirm"
+                        cancelBtnText="Cancel"
+                        showIcon={false}
+                        customStyles={{
+                          dateInput: {
+                            borderBottomColor :'white',
+                            borderBottomWidth:2,
+                            borderRightWidth:0,
+                            borderTopWidth:0,
+                            borderLeftWidth:0,
+                          }
+                        }}
+                        onDateChange={(birthday) => {this.setState({birthday: birthday})}}
+                      />
+                       <TouchableHighlight onPress={()=>this.register()} style={mainStyles.Button}>
+                          <Text style={{color:'white',textAlign:'center'}}>Create account</Text>
+                      </TouchableHighlight>  
+                      <Text onPress={() =>Actions.login()} style={{color:'white',textAlign:'center',zIndex:3,marginTop:10}}>Already have account</Text>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
