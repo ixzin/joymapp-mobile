@@ -8,6 +8,7 @@ import {
 } 
 from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import DatePicker from 'react-native-datepicker';
 import  mainStyles from './styles';
 
 class introScreen extends Component {
@@ -17,7 +18,7 @@ class introScreen extends Component {
             if (value != null){
               Actions.main({userId:value,type:'reset'});
             } else{
-              Actions.login({type:'reset'});
+              Actions.register({type:'reset'});
             }
         
         });

@@ -69,7 +69,7 @@ class loginScreen extends Component {
                       secureTextEntry={true} 
                       onChangeText={(password) => this.setState({password})}
                     />
-                     <TouchableHighlight onPress={()=>this.goLogin()} style={styles.Button}>
+                     <TouchableHighlight onPress={()=>this.goLogin()} style={mainStyles.Button}>
                         <Text style={{color:'white',textAlign:'center'}}>Sign in</Text>
                     </TouchableHighlight>  
                     <Text style={{color:'white',marginTop:10,marginBottom:10}}>OR</Text>
@@ -109,13 +109,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex:2
-  },
-  Button:{
-    backgroundColor:'#ea2e49',
-    padding:10,
-    zIndex:2,
-    width:200,
-    height:40
   },
   facebookButton:{
       backgroundColor:'#3b5998',

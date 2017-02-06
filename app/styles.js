@@ -32,7 +32,14 @@ const mainStyles = StyleSheet.create({
 	    color:'white',
 	    height:60,
 	    zIndex:3
-	  }
+	  },
+	Button:{
+    backgroundColor:'#ea2e49',
+    padding:10,
+    zIndex:2,
+    width:200,
+    height:40
+  }
  });
 
 export default mainStyles;
