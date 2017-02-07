@@ -13,7 +13,6 @@ import {
 from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from './icon'; 
-import renderIf from './renderif';
 import  mainStyles from './styles';
 class loginScreen extends Component {
    constructor(props) {

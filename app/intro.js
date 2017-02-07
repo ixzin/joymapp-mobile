@@ -18,7 +18,7 @@ class introScreen extends Component {
             if (value != null){
               Actions.main({userId:value,type:'reset'});
             } else{
-              Actions.register({type:'reset'});
+              Actions.login({type:'reset'});
             }
         
         });

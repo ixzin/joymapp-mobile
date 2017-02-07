@@ -39,6 +39,15 @@ const mainStyles = StyleSheet.create({
     zIndex:2,
     width:200,
     height:40
+  },
+  errorPopup:{
+  	position:'absolute',
+  	top:0,
+  	left:0,
+  	right:0,
+  	backgroundColor: '#ea2e49',
+  	padding:10,
+  	zIndex:9
   }
  });
 

@@ -5,12 +5,14 @@ import {
   Image,
   TouchableHighlight,
   TouchableWithoutFeedback,
-    Keyboard,
+  AsyncStorage,
+  Keyboard,
   TextInput,
   View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import DatePicker from 'react-native-datepicker';
+import renderIf from './renderif';
 import  mainStyles from './styles';
 
 class registerScreen extends Component {
@@ -26,9 +28,10 @@ class registerScreen extends Component {
       if (arg==this.state.password) 
           return this.state.password==this.state.passwordConfirm?true:false;
       if (arg==this.state.email) {
-        let regex='/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/';
-        return arg.replace(regex,'').length>0?true:false;
+        let regex= /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return regex.test(arg);
       }
+      return true;
    }
    register() {
     if (this.validate(this.state.password,4)&&this.validate(this.state.firstname,3)&&this.validate(this.state.lastname,3)&&this.validate(this.state.email,6)) {
@@ -53,27 +56,31 @@ class registerScreen extends Component {
           })
           }).then((response) => response.json())
               .then((responseJson) => {
-                if (responseJson.success) {
-                  try {
-                  } catch (error) {
-                    console.error(error);
-                  }
-                  Actions.main({userId:responseJson.id});
-                } else {
-                  alert('Wrong username or password!!!');
+                if (responseJson.user) {
+                   try {
+                      AsyncStorage.setItem('userId',responseJson.user._id);
+                    } catch (error) {
+                      console.error(error);
+                    }
+                    Actions.main({userId:responseJson.user._id});
                 }
               })
               .catch((error) => {
                 console.error(error);
               });
     } else {
-      alert('Fill all fields');
+      this.setState({errorMessage:'Please fill correct all fields'});
     }
    }
   render() {
     return (
     <TouchableWithoutFeedback onPress={ () => { Keyboard.dismiss() } }>
         <View style={mainStyles.container}>
+                {renderIf(this.state.errorMessage, 
+                    <View style={mainStyles.errorPopup}>
+                        <Text style={{color:'white',textAlign:'center'}}>{this.state.errorMessage}</Text>
+                    </View>
+                )}
             <View style={mainStyles.Mask}></View>
             <Image style={mainStyles.background} source={require('../img/intro.jpg')}/>         
               <Text style={mainStyles.header}>Register</Text>
@@ -83,21 +90,25 @@ class registerScreen extends Component {
                         style={this.state.erroEmail?styles.error:styles.input}
                         placeholder="Email"
                         placeholderTextColor="white"
+                        value={this.state.email}
                         onChangeText={(email) => this.setState({email})}
-                        onBlur={(email) => {this.setState({erroEmail: this.validate(this.state.email)})}}
+                        onBlur={() => {this.setState({erroEmail: !this.validate(this.state.email,6)})}}
                       />
                       <TextInput
-                        style={styles.input}
+                        style={this.state.erroPass?styles.error:styles.input}
                         placeholder="Password"
                         placeholderTextColor="white"
+                        value={this.state.password}
                         secureTextEntry={true} 
-                        onChangeText={(password) => this.setState({password})}
+                        onChangeText={(password) => this.setState({password})}                      
                       />
                        <TextInput
-                        style={styles.input}
+                        style={this.state.errorFirstname?styles.error:styles.input}
                         placeholder="First name"
                         placeholderTextColor="white"
+                        value={this.state.firstname}
                         onChangeText={(firstname) => this.setState({firstname})}
+                        onBlur={() => {this.setState({errorFirstname: !this.validate(this.state.firstname,3)})}}
                       />
                       
                   </View>    
@@ -109,19 +120,22 @@ class registerScreen extends Component {
                         onChangeText={(login) => this.setState({login})}
                       />
                        <TextInput
-                        style={styles.input}
+                        style={this.state.erroPass?styles.error:styles.input}
                         placeholder="Confirm"
                         placeholderTextColor="white"
+                        value={this.state.passwordConfirm}
                         secureTextEntry={true} 
                         onChangeText={(passwordConfirm) => this.setState({passwordConfirm})}
+                        onBlur={() => {this.setState({erroPass: !this.validate(this.state.password,4)})}}
                       />             
                       <TextInput
-                        style={styles.input}
+                        style={this.state.errorLastname?styles.error:styles.input}
                         placeholder="Last name"
                         placeholderTextColor="white"
+                        value={this.state.lastname}
                         onChangeText={(lastname) => this.setState({lastname})}
-                      />
-                     
+                        onBlur={() => {this.setState({errorLastname: !this.validate(this.state.lastname,3)})}}
+                      />               
                   </View>    
               </View>
               <DatePicker
