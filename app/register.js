@@ -42,7 +42,7 @@ class registerScreen extends Component {
           firstname:this.state.firstname,
           lastname:this.state.lastname,
           birthday:this.state.birthday?this.state.birthday.split('-')[2]:'',
-          birthmonth:this.state.birthday?this.state.birthday.split('-')[1]:'',
+          birthmonth:this.state.birthday?(+this.state.birthday.split('-')[1]-1):'',
           birthyear:this.state.birthday?this.state.birthday.split('-')[0]:''
       }
        return fetch('http://teethemes.com:3000/api/users',{
@@ -62,6 +62,7 @@ class registerScreen extends Component {
                     } catch (error) {
                       console.error(error);
                     }
+                    this.setState({errorMessage:false});
                     Actions.main({userId:responseJson.user._id});
                 }
               })

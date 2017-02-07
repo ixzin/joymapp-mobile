@@ -12,6 +12,7 @@ import {
 } 
 from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import renderIf from './renderif';
 import Icon from './icon'; 
 import  mainStyles from './styles';
 class loginScreen extends Component {
@@ -41,9 +42,10 @@ class loginScreen extends Component {
             } catch (error) {
               console.error(error);
             }
+            this.setState({errorMessage:false});
             Actions.main({userId:responseJson.id});
           } else {
-            alert('Wrong username or password!!!');
+            this.setState({errorMessage:'Wrong username or password'});
           }
         })
         .catch((error) => {
@@ -54,6 +56,11 @@ class loginScreen extends Component {
     return (
       <TouchableWithoutFeedback onPress={ () => { Keyboard.dismiss() } }>
           <View style={mainStyles.container}>
+          {renderIf(this.state.errorMessage, 
+                    <View style={mainStyles.errorPopup}>
+                        <Text style={{color:'white',textAlign:'center'}}>{this.state.errorMessage}</Text>
+                    </View>
+                )}
               <View style={mainStyles.Mask}></View>
               <Image style={mainStyles.background} source={require('../img/intro.jpg')}/>
                 <View style={styles.loginForm}>

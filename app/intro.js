@@ -20,7 +20,6 @@ class introScreen extends Component {
             } else{
               Actions.login({type:'reset'});
             }
-        
         });
   };
   render() {
