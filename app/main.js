@@ -30,14 +30,14 @@ class mainScreen extends Component {
          componentDidMount = () => {
             navigator.geolocation.getCurrentPosition(
                (position) => {
-                  var initialPosition = JSON.stringify(position);
+                  let initialPosition=[position.coords.latitude,position.coords.longitude];
                   this.setState({initialPosition});
                },
                (error) => alert(error.message),
                {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
             );
             this.watchID = navigator.geolocation.watchPosition((position) => {
-               var lastPosition = JSON.stringify(position);
+               let lastPosition =[position.coords.latitude,position.coords.longitude];
                this.setState({lastPosition});
             });
          }
@@ -52,11 +52,11 @@ class mainScreen extends Component {
                <View>
                   <Text>
                     <Text style={styles.title}>Initial position: </Text>
-                    {this.state.initialPosition}
+                    {this.state.initialPosition[0]},{this.state.initialPosition[1]}
                   </Text>
                   <Text>
                   <Text style={styles.title}>Current position: </Text>
-                    {this.state.lastPosition}
+                    {this.state.lastPosition[0]}, {this.state.lastPosition[1]}
                   </Text>
               </View>
         )}
