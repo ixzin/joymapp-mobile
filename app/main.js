@@ -52,10 +52,11 @@ class mainScreen extends Component {
         {renderIf(this.state.showMap, 
                <View>
                 <MapView
-                      style={{marginLeft:20,marginRight:20,height:300}}
+                      style={{marginLeft:20,marginRight:20,height:300,width:300}}
+                      showsUserLocation={true}
                       initialRegion={{
-                        latitude: 37.78825,
-                        longitude: -122.4324,
+                        latitude: this.state.lastPosition[0],
+                        longitude:this.state.lastPosition[1],
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                       }}
