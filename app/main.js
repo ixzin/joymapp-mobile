@@ -8,6 +8,7 @@ import {
   View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import MapView from 'react-native-maps';
 import renderIf from './renderif';
 import  mainStyles from './styles';
 class mainScreen extends Component {
@@ -50,6 +51,15 @@ class mainScreen extends Component {
       <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
         {renderIf(this.state.showMap, 
                <View>
+                <MapView
+                      style={{marginLeft:20,marginRight:20,height:300}}
+                      initialRegion={{
+                        latitude: 37.78825,
+                        longitude: -122.4324,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                      }}
+                    />
                   <Text>
                     <Text style={styles.title}>Initial position: </Text>
                     {this.state.initialPosition[0]},{this.state.initialPosition[1]}
