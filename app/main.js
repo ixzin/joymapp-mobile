@@ -69,7 +69,7 @@ class mainScreen extends Component {
                         longitudeDelta: 0.0421,
                       }}
                     >
-                        <MapView.Polyline coordinates={this.state.route}/>
+                        <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49"/>
                     </MapView>              
                   <Text>
                     <Text style={styles.title}>Initial position: </Text>
