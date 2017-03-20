@@ -4,6 +4,7 @@ import  introScreen from './intro';
 import loginScreen from './login';
 import mainScreen from './main';
 import registerScreen from './register';
+import trackingScreen from './tracking';
 
 const scenes = Actions.create(
 <Scene key="root">
@@ -27,6 +28,12 @@ const scenes = Actions.create(
             hideNavBar={true}
             component={mainScreen}
             title="main"
+          />
+          <Scene
+            key="tracking"
+            hideNavBar={true}
+            component={trackingScreen}
+            title="tracking"
           />
         </Scene>
 );
