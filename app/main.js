@@ -14,10 +14,11 @@ import  mainStyles from './styles';
 class mainScreen extends Component {
   constructor(props) {
     super(props);
+    this.mapRef = null;
     this.state = {
-      initialPosition: 'unknown',
       lastPosition: 'unknown',
       route: [],
+      zoom:false,
       showMap:false
      }
    }
@@ -33,27 +34,41 @@ class mainScreen extends Component {
      watchID = (null: ?number);
          componentDidMount = () => {
           let route=[];
-            navigator.geolocation.getCurrentPosition(
-               (position) => {
-                  let initialPosition=[position.coords.latitude,position.coords.longitude];
-                  this.setState({initialPosition});
-               },
-               (error) => alert(error.message),
-               {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-            );
+          const circumference = (40075 / 360) * 1000;
+          let setCenter=function(data) {
+            let longitudes=[];
+            let latitudes=[];
+            for (let i=0;i<data.length;i++) {
+              longitudes.push(data[i].longitude);
+              latitudes.push(data[i].latitude);
+            }
+            let longMin =  Math.min.apply(null,longitudes);
+            let longMax =  Math.max.apply(null,longitudes);
+            let latMin = Math.min.apply(null,latitudes);
+            let latMax = Math.max.apply(null,latitudes);
+            
+            let longitudeDelta = 1 / (Math.cos(longMax - longMin) * circumference)
+            let latitudeDelta = 1 / (Math.cos(latMax - latMin) * circumference)
+            let delta=[longitudeDelta,latitudeDelta];
+            return delta;
+          }
             this.watchID = navigator.geolocation.watchPosition((position) => {
                let lastPosition =[position.coords.latitude,position.coords.longitude];                           
                this.setState({lastPosition});
                let positionCoordinate=[{latitude:this.state.lastPosition[0],longitude:this.state.lastPosition[1]}];  
                route=route.concat(positionCoordinate);
-              console.log(route);
+                if (route.length>=2){
+                  let zoom=setCenter(route);
+                  this.setState({zoom});
+                }
               this.setState({route});  
             });
-              
+            
          }
          componentWillUnmount = () => {
             navigator.geolocation.clearWatch(this.watchID);
          }
+
     render() {
     return (
       <View style={mainStyles.container}>
@@ -68,17 +83,11 @@ class mainScreen extends Component {
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                       }}
+                      ref={(ref) => { this.mapRef = ref }}
+                      onLayout = {() => this.mapRef.fitToCoordinates(this.state.route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false })}
                     >
-                        <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49"/>
+                        <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
                     </MapView>              
-                  <Text>
-                    <Text style={styles.title}>Initial position: </Text>
-                    {this.state.initialPosition[0]},{this.state.initialPosition[1]}
-                  </Text>
-                  <Text>
-                  <Text style={styles.title}>Current position: </Text>
-                    {this.state.lastPosition[0]}, {this.state.lastPosition[1]}
-                  </Text>
               </View>
         <TouchableHighlight onPress={() => this.getPositions()} style={mainStyles.Button}>
             <Text style={{color:'white',textAlign:'center'}}>Start tracking</Text>        
