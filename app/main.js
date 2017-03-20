@@ -34,34 +34,12 @@ class mainScreen extends Component {
      watchID = (null: ?number);
          componentDidMount = () => {
           let route=[];
-          const circumference = (40075 / 360) * 1000;
-          let setCenter=function(data) {
-            let longitudes=[];
-            let latitudes=[];
-            for (let i=0;i<data.length;i++) {
-              longitudes.push(data[i].longitude);
-              latitudes.push(data[i].latitude);
-            }
-            let longMin =  Math.min.apply(null,longitudes);
-            let longMax =  Math.max.apply(null,longitudes);
-            let latMin = Math.min.apply(null,latitudes);
-            let latMax = Math.max.apply(null,latitudes);
-            
-            let longitudeDelta = 1 / (Math.cos(longMax - longMin) * circumference)
-            let latitudeDelta = 1 / (Math.cos(latMax - latMin) * circumference)
-            let delta=[longitudeDelta,latitudeDelta];
-            return delta;
-          }
             this.watchID = navigator.geolocation.watchPosition((position) => {
                let lastPosition =[position.coords.latitude,position.coords.longitude];                           
                this.setState({lastPosition});
                let positionCoordinate=[{latitude:this.state.lastPosition[0],longitude:this.state.lastPosition[1]}];  
                route=route.concat(positionCoordinate);
-                if (route.length>=2){
-                  let zoom=setCenter(route);
-                  this.setState({zoom});
-                }
-              this.setState({route});  
+               this.setState({route});  
             });
             
          }
@@ -88,6 +66,9 @@ class mainScreen extends Component {
                     >
                         <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
                     </MapView>              
+                  <Text>
+                    {this.state.lastPosition[0]}, {this.state.lastPosition[1]}
+                  </Text>
               </View>
         <TouchableHighlight onPress={() => this.getPositions()} style={mainStyles.Button}>
             <Text style={{color:'white',textAlign:'center'}}>Start tracking</Text>        
