@@ -11,6 +11,7 @@ import { Actions } from 'react-native-router-flux';
 import MapView from 'react-native-maps';
 import renderIf from './renderif';
 import  mainStyles from './styles';
+import mapStyles from './mapStyles';
 class mainScreen extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +20,8 @@ class mainScreen extends Component {
       lastPosition: 'unknown',
       route: [],
       zoom:false,
-      showMap:false
+      showMap:false,
+      mapStyle:mapStyles
      }
    }
    
@@ -45,8 +47,7 @@ class mainScreen extends Component {
          }
          componentWillUnmount = () => {
             navigator.geolocation.clearWatch(this.watchID);
-         }
-
+         }   
     render() {
     return (
       <View style={mainStyles.container}>
@@ -63,6 +64,7 @@ class mainScreen extends Component {
                       }}
                       ref={(ref) => { this.mapRef = ref }}
                       onLayout = {() => this.mapRef.fitToCoordinates(this.state.route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false })}
+                      customMapStyle={this.state.mapStyle }
                     >
                         <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
                     </MapView>              
