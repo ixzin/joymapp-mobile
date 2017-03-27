@@ -38,12 +38,20 @@ class loginScreen extends Component {
         .then((responseJson) => {
           if (responseJson.success) {
             try {
-              AsyncStorage.setItem('userId',responseJson.id);
+              let userId=responseJson.id;
+              let token=responseJson.token;
+              AsyncStorage.setItem('userId',userId);
+              AsyncStorage.setItem('token',token);
+              let user;
+              getUserInfo(userId,token).then(function(response) {
+                AsyncStorage.setItem('user',JSON.stringify(response.user));
+                Actions.main({user:response.user});
+              });
             } catch (error) {
               console.error(error);
             }
             this.setState({errorMessage:false});
-            Actions.main({userId:responseJson.id});
+            
           } else {
             this.setState({errorMessage:'Wrong username or password'});
           }
@@ -51,6 +59,22 @@ class loginScreen extends Component {
         .catch((error) => {
           console.error(error);
         });
+        function getUserInfo(id,token) {
+          return fetch('http://teethemes.com:3000/api/users/'+id,{
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'x-access-token':token
+            }
+            }).then((response) => response.json())
+                .then((responseJSON) => {
+                    return Promise.resolve(responseJSON);  
+                })
+                .catch((error) => {
+                  return Promise.reject(error);
+                });
+        }
   }
   render() {
     return (

@@ -14,7 +14,7 @@ class mainScreen extends Component {
   
     logout() {
       AsyncStorage.clear();
-      Actions.login({userId:''});
+      Actions.login({user:''});
     }
     render() {
     return (
@@ -23,8 +23,11 @@ class mainScreen extends Component {
         <View>
           <TouchableHighlight onPress={Actions.tracking} style={mainStyles.Button}>
               <Text style={{color:'white',textAlign:'center'}}>Start tracking</Text>        
-          </TouchableHighlight>
-          <Text style={styles.welcome}>Hello, {this.props.userId}</Text>        
+          </TouchableHighlight>     
+          <View>
+            <Image style={{width:50,height:50}} source={{uri: 'http://teethemes.com:3000/'+this.props.user.image}}/>
+            <Text>{this.props.user.firstname}&nbsp;{this.props.user.lastname} </Text>
+          </View>
           <TouchableHighlight onPress={()=>this.logout()} style={mainStyles.Button}>
               <Text style={{color:'white',textAlign:'center'}}>Logout</Text>
           </TouchableHighlight>  

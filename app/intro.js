@@ -13,10 +13,11 @@ import  mainStyles from './styles';
 
 class introScreen extends Component {
 	componentWillMount(){
-        AsyncStorage.getItem('userId')
+        AsyncStorage.getItem('user')
         .then( (value) =>{
             if (value != null){
-              Actions.main({userId:value,type:'reset'});
+              let userObj=JSON.parse(value);
+              Actions.main({user:userObj});
             } else{
               Actions.login({type:'reset'});
             }
