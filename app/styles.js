@@ -40,6 +40,14 @@ const mainStyles = StyleSheet.create({
     width:200,
     height:40
   },
+  	menuButton:{
+    backgroundColor:'#ea2e49',
+    padding:10,
+    zIndex:2,
+    width:200,
+    height:40,
+    marginBottom:10
+  },
   errorPopup:{
   	position:'absolute',
   	top:0,
