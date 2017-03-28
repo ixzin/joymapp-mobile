@@ -4,6 +4,7 @@ import {
   AsyncStorage,
   Text,
   Image,
+  ListView,
   TouchableHighlight,
   View
 } from 'react-native';
@@ -14,12 +15,43 @@ class mainScreen extends Component {
     constructor(props) {
     super(props);
     this.state = {
-      changeRoute:false
+      changeRoute:false,
+      routes:[]
      }
    }  
     logout() {
       AsyncStorage.clear();
       Actions.login({user:''});
+    }
+    getRoutes(id) {
+      this.setState({changeRoute:true});
+       AsyncStorage.getItem('token')
+        .then( (value) =>{
+            if (value != null){
+                this.getRoutesByUser(id,value).then(function(response) {
+                  console.log(response);
+                });
+              } else{
+                console.log('no token!!!');
+              }
+        });
+
+    }
+    getRoutesByUser(id,token) {
+        return fetch('http://teethemes.com:3000/api/routesByUser/'+id,{
+          method: 'GET',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'x-access-token':token
+        }
+        }).then((response) => response.json())
+            .then((responseJSON) => {
+                return Promise.resolve(responseJSON);  
+            })
+            .catch((error) => {
+              return Promise.reject(error);
+            });
     }
     render() {
     return (
@@ -33,11 +65,11 @@ class mainScreen extends Component {
         </View>
         <View>
           {renderIf(!this.state.changeRoute,
-          <TouchableHighlight onPress={()=>this.setState({changeRoute:true})} style={mainStyles.menuButton}>
+          <TouchableHighlight onPress={()=>this.getRoutes(this.props.user._id)} style={mainStyles.menuButton}>
               <Text style={{color:'white',textAlign:'center'}}>Start tracking</Text>
           </TouchableHighlight>
           )}
-          {renderIf(this.state.changeRoute,
+          {renderIf(this.state.changeRoute,              
             <View>
               <Text>Choose route</Text>
               <Text> or create new</Text>
@@ -51,11 +83,12 @@ class mainScreen extends Component {
             <TouchableHighlight style={mainStyles.menuButton}>
                 <Text style={{color:'white',textAlign:'center'}}>Edit profile</Text>        
             </TouchableHighlight>      
-            <TouchableHighlight onPress={()=>this.logout()} style={mainStyles.menuButton}>
-                <Text style={{color:'white',textAlign:'center'}}>Logout</Text>
-            </TouchableHighlight>  
+
           </View>
           )}
+          <TouchableHighlight onPress={()=>this.logout()} style={mainStyles.menuButton}>
+              <Text style={{color:'white',textAlign:'center'}}>Logout</Text>
+           </TouchableHighlight>  
         </View>
       </View>
     );
