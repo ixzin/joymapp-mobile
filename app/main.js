@@ -49,26 +49,26 @@ class mainScreen extends Component {
     render() {
     return (
       <View style={mainStyles.container}>        
-          <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
-        <View>
-          <View>
-            <Image style={{width:150,height:150,borderRadius:75}} source={{uri: 'http://teethemes.com:3000/'+this.props.user.image}}/>
+        <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
+        <ScrollView>
+          <View style={styles.contentWrapper}>
+            <View style={{paddingTop:60}}>
+              <Image style={{width:150,height:150,borderRadius:75}} source={{uri: 'http://teethemes.com:3000/'+this.props.user.image}}/>
+            </View>
+            <Text style={styles.header}>{this.props.user.firstname.toUpperCase()}&nbsp;{this.props.user.lastname.toUpperCase()} </Text>
           </View>
-          <Text style={styles.header}>{this.props.user.firstname.toUpperCase()}&nbsp;{this.props.user.lastname.toUpperCase()} </Text>
-        </View>
-        <View>
+          <View>
           {renderIf(!this.state.changeRoute,
           <TouchableHighlight onPress={()=>this.getRoutes(this.props.user._id)} style={mainStyles.menuButton}>
               <Text style={{color:'white',textAlign:'center'}}>Start tracking</Text>
           </TouchableHighlight>
           )}
+          {renderIf(this.state.routes.length==0&&this.state.changeRoute, 
+                <Image style={{width:50,height:50}} source={require('../img/loader.gif')}/>
+          )}
           {renderIf(this.state.changeRoute,              
             <View>
               <Text style={styles.header}>Choose route</Text>
-              {renderIf(this.state.changeRoute.length==0, 
-                <Image style={{width:50,height:50}} source={require('../img/loader.gif')}/>
-                )}
-               <ScrollView>
                 {this.state.routes.map(function(route, i){
                   return(
                     <View style={styles.routeContainer} key={i}>
@@ -85,9 +85,7 @@ class mainScreen extends Component {
                 <TouchableHighlight onPress={()=>this.setState({changeRoute:false})} style={mainStyles.menuButton}>
                   <Text style={{color:'white',textAlign:'center'}}>Return</Text>
                 </TouchableHighlight>
-                </View>
-              </ScrollView>         
-
+                </View>      
             </View>
           )}
           {renderIf(!this.state.changeRoute,
@@ -98,10 +96,13 @@ class mainScreen extends Component {
 
           </View>
           )}
+          <View style={styles.contentWrapper}>
           <TouchableHighlight onPress={()=>this.logout()} style={mainStyles.menuButton}>
               <Text style={{color:'white',textAlign:'center'}}>Logout</Text>
            </TouchableHighlight>  
+           </View>
         </View>
+        </ScrollView>
       </View>
     );
   }
@@ -113,6 +114,11 @@ const styles = StyleSheet.create({
     fontSize:18,
     marginBottom:10,
     color:'black'
+  },
+  contentWrapper:{
+    flex:1,
+    flexDirection:'column',
+    alignItems:'center'
   },
   routeContainer:{
     flex: 1, 
