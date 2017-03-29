@@ -33,6 +33,17 @@ const mainStyles = StyleSheet.create({
 	    height:60,
 	    zIndex:3
 	  },
+	    input:{
+    color:'white',
+    height:40,
+    borderBottomWidth:2,
+    minWidth:200,
+    borderColor:'white',
+    textAlign:'left',
+    fontSize:18,
+    marginTop:0,
+    marginBottom:10
+  },
 	Button:{
     backgroundColor:'#ea2e49',
     padding:10,

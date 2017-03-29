@@ -90,13 +90,13 @@ class loginScreen extends Component {
                 <View style={styles.loginForm}>
                         <Text style={mainStyles.header}>Titile</Text>
                         <TextInput
-                          style={styles.input}
+                          style={mainStyles.input}
                           placeholder="Login"
                           placeholderTextColor="white"
                           onChangeText={(login) => this.setState({login})}
                         />
                         <TextInput
-                          style={styles.input}
+                          style={mainStyles.input}
                           placeholder="Password"
                           placeholderTextColor="white"
                           secureTextEntry={true} 
@@ -159,17 +159,6 @@ const styles = StyleSheet.create({
       width:200,
       height:40,
       marginBottom:10
-  },
-  input:{
-    color:'white',
-    height:40,
-    borderBottomWidth:2,
-    minWidth:200,
-    borderColor:'white',
-    textAlign:'left',
-    fontSize:18,
-    marginTop:0,
-    marginBottom:10
   }
 });
 
