@@ -65,7 +65,9 @@ class mainScreen extends Component {
           {renderIf(this.state.changeRoute,              
             <View>
               <Text style={styles.header}>Choose route</Text>
-              <Image style={mainStyles.background} source={require('../img/loader.gif')}/>
+              {renderIf(this.state.changeRoute.length==0, 
+                <Image style={{width:50,height:50}} source={require('../img/loader.gif')}/>
+                )}
                <ScrollView>
                 {this.state.routes.map(function(route, i){
                   return(
