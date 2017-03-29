@@ -79,7 +79,7 @@ class mainScreen extends Component {
                   );
                 })}
                 <View style={{flex:1,flexDirection:'column',alignItems:'center'}}>
-                <TouchableHighlight onPress={Actions.tracking}  style={mainStyles.menuButton}>
+                <TouchableHighlight onPress={Actions.creation}  style={mainStyles.menuButton}>
                   <Text style={{color:'white',textAlign:'center'}}>Create new route</Text>
                 </TouchableHighlight>
                 <TouchableHighlight onPress={()=>this.setState({changeRoute:false})} style={mainStyles.menuButton}>
