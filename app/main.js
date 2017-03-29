@@ -4,7 +4,7 @@ import {
   AsyncStorage,
   Text,
   Image,
-  ListView,
+  ScrollView,
   TouchableHighlight,
   View
 } from 'react-native';
@@ -23,19 +23,12 @@ class mainScreen extends Component {
       AsyncStorage.clear();
       Actions.login({user:''});
     }
-    getRoutes(id) {
+    async getRoutes(id) {
       this.setState({changeRoute:true});
-       AsyncStorage.getItem('token')
-        .then( (value) =>{
-            if (value != null){
-                this.getRoutesByUser(id,value).then(function(response) {
-                  console.log(response);
-                });
-              } else{
-                console.log('no token!!!');
-              }
-        });
-
+      let token=await AsyncStorage.getItem('token');
+      let routes=await this.getRoutesByUser(id,token);
+      console.log(routes);
+      this.setState({routes:routes});
     }
     getRoutesByUser(id,token) {
         return fetch('http://teethemes.com:3000/api/routesByUser/'+id,{
@@ -71,11 +64,28 @@ class mainScreen extends Component {
           )}
           {renderIf(this.state.changeRoute,              
             <View>
-              <Text>Choose route</Text>
-              <Text> or create new</Text>
-              <TouchableHighlight onPress={Actions.tracking}  style={mainStyles.menuButton}>
-                <Text style={{color:'white',textAlign:'center'}}>Create new route</Text>
-              </TouchableHighlight>
+              <Text style={styles.header}>Choose route</Text>
+              <Image style={mainStyles.background} source={require('../img/loader.gif')}/>
+               <ScrollView>
+                {this.state.routes.map(function(route, i){
+                  return(
+                    <View style={styles.routeContainer} key={i}>
+                      <Image  style={styles.routeIcon} source={{uri: 'http://teethemes.com:3000/data/routes/'+route._id+'/thumb.jpg'}}/>
+                      <Text style={styles.routeNameCell}>{route.name}</Text>
+                      <Text style={styles.routeStatusCell}>{route.status}</Text>
+                    </View>
+                  );
+                })}
+                <View style={{flex:1,flexDirection:'column',alignItems:'center'}}>
+                <TouchableHighlight onPress={Actions.tracking}  style={mainStyles.menuButton}>
+                  <Text style={{color:'white',textAlign:'center'}}>Create new route</Text>
+                </TouchableHighlight>
+                <TouchableHighlight onPress={()=>this.setState({changeRoute:false})} style={mainStyles.menuButton}>
+                  <Text style={{color:'white',textAlign:'center'}}>Return</Text>
+                </TouchableHighlight>
+                </View>
+              </ScrollView>         
+
             </View>
           )}
           {renderIf(!this.state.changeRoute,
@@ -96,17 +106,34 @@ class mainScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'grey',
-  },
   header:{
     textAlign:'center',
     fontSize:18,
     marginBottom:10,
     color:'black'
+  },
+  routeContainer:{
+    flex: 1, 
+    flexDirection: 'row',
+    height:60,
+    margin:0
+  },
+  routeIcon:{
+    width:50,
+    height:50,
+    borderRadius:25
+  },
+  routeNameCell:{
+    paddingLeft:20,
+    paddingRight:20,
+    margin:0,
+    width:160
+  },
+  routeStatusCell:{
+    paddingLeft:20,
+    paddingRight:20,
+    margin:0,
+    width:120
   }
 });
 
