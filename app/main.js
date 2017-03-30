@@ -27,7 +27,6 @@ class mainScreen extends Component {
       this.setState({changeRoute:true});
       let token=await AsyncStorage.getItem('token');
       let routes=await this.getRoutesByUser(id,token);
-      console.log(routes);
       this.setState({routes:routes});
     }
     getRoutesByUser(id,token) {

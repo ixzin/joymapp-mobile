@@ -199,11 +199,11 @@ const styles = StyleSheet.create({
     fontSize:14
   },
   error:{
-    color:'red',
+    color:'#ea2e49',
     height:40,
     borderBottomWidth:2,
     minWidth:120,
-    borderColor:'red',
+    borderColor:'#ea2e49',
     textAlign:'left',
     fontSize:14
 
