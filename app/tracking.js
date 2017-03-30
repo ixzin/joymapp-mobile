@@ -25,14 +25,16 @@ class trackingScreen extends Component {
      watchID = (null: ?number);
          componentDidMount = () => {
           let route=[];
+          let points=[];
             this.watchID = navigator.geolocation.watchPosition((position) => {
                let lastPosition =[position.coords.latitude,position.coords.longitude];                           
                this.setState({lastPosition});
                let positionCoordinate=[{latitude:this.state.lastPosition[0],longitude:this.state.lastPosition[1]}];  
                route=route.concat(positionCoordinate);
+               points.push(lastPosition);
                this.setState({route});  
                if (route.length>2) {
-                  this.saveRoute(route).then(function(response) {
+                  this.saveRoute(points).then(function(response) {
                   console.log(response);
                  });
                }
@@ -54,10 +56,10 @@ class trackingScreen extends Component {
               type: this.props.route.type,
               name: this.props.route.name,
               owner:this.props.route.owner,
-              status:'planned',
+              status:'active',
               description: this.props.route.description,
-              startDate: this.props.route.startDate,
-              endDate: this.props.route.endDate,
+              startdate: this.props.route.startdate,
+              enddate: this.props.route.startdate,
               path:points
             })
             }).then((response) => response.json())
