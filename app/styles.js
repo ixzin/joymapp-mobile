@@ -44,6 +44,19 @@ const mainStyles = StyleSheet.create({
     marginTop:0,
     marginBottom:10
   },
+  textarea:{
+  	color:'white',
+    borderBottomWidth:2,
+    borderTopWidth:2,
+    borderLeftWidth:2,
+    borderRightWidth:2,
+    minWidth:200,
+    borderColor:'white',
+    textAlign:'left',
+    fontSize:18,
+    marginTop:0,
+    marginBottom:10
+  },
 	Button:{
     backgroundColor:'#ea2e49',
     padding:10,

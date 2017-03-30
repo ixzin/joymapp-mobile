@@ -4,6 +4,9 @@ import {
   AsyncStorage,
   Text,
   Image,
+  TextInput,
+  Modal,
+  TouchableHighlight,
   View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -17,9 +20,11 @@ class trackingScreen extends Component {
     this.state = {
       lastPosition: 'unknown',
       route: [],
+      active:true,
       zoom:false,
       showMap:false,
-      mapStyle:mapStyles
+      mapStyle:mapStyles,
+      eventModal:false
      }
    }        
      watchID = (null: ?number);
@@ -27,17 +32,19 @@ class trackingScreen extends Component {
           let route=[];
           let points=[];
             this.watchID = navigator.geolocation.watchPosition((position) => {
-               let lastPosition =[position.coords.latitude,position.coords.longitude];                           
-               this.setState({lastPosition});
-               let positionCoordinate=[{latitude:this.state.lastPosition[0],longitude:this.state.lastPosition[1]}];  
-               route=route.concat(positionCoordinate);
-               points.push(lastPosition);
-               this.setState({route});  
-               if (route.length>2) {
-                  this.saveRoute(points).then(function(response) {
-                  console.log(response);
-                 });
-               }
+              if (this.state.active) {
+                 let lastPosition =[position.coords.latitude,position.coords.longitude];                           
+                 this.setState({lastPosition});
+                 let positionCoordinate=[{latitude:this.state.lastPosition[0],longitude:this.state.lastPosition[1]}];  
+                 route=route.concat(positionCoordinate);
+                 points.push(lastPosition);
+                 this.setState({route});  
+                 if (route.length>2) {
+                    this.saveRoute(points).then(function(response) {
+                    console.log(response);
+                   });
+                 }
+              }
             });           
          }
          componentWillUnmount = () => {
@@ -75,6 +82,41 @@ class trackingScreen extends Component {
     		<View style={mainStyles.container}>
                <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
                <View>
+                  <Modal
+                    animationType={"fade"}
+                    transparent={false}
+                    visible={this.state.eventModal}
+                    onRequestClose={() => {alert("Modal has been closed.")}}
+                    style={{width:300,height:500,padding:20}}
+                    >
+                    <View style={mainStyles.container}>
+                      <Text style={styles.header}>Modal</Text>
+                      <View style={styles.eventForm}>
+                           <TextInput
+                              style={mainStyles.input}
+                              placeholder="Title"
+                              placeholderTextColor="white"
+                              onChangeText={(eventDescription) => this.setState({eventName})}
+                            />
+                            <TextInput
+                              style={mainStyles.textarea}
+                              multiline={true}
+                              numberOfLines={4}
+                              placeholder="Description"
+                              placeholderTextColor="white"
+                              onChangeText={(eventDescription) => this.setState({eventDescription})}                 
+                            />
+                            <View>
+                                <TouchableHighlight style={mainStyles.menuButton}>
+                                    <Text style={{color:'white',textAlign:'center'}}>Add event</Text>
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={()=>this.setState({eventModal:false})} style={styles.pauseButton}>
+                                  <Text style={{color:'white',textAlign:'center'}}>Close</Text>
+                                </TouchableHighlight>  
+                            </View>
+                      </View>
+                    </View>
+                  </Modal>    
                 <MapView
                       style={{marginLeft:20,marginRight:20,height:300,width:300}}
                       showsUserLocation={true}
@@ -93,10 +135,43 @@ class trackingScreen extends Component {
                   <Text>
                     {this.state.lastPosition[0]}, {this.state.lastPosition[1]}
                   </Text>
+                  <View style={{flex:1,flexDirection:'column',alignItems:'center'}}>
+                    <TouchableHighlight onPress={()=>this.setState({eventModal:true})} style={mainStyles.menuButton}>
+                        <Text style={{color:'white',textAlign:'center'}}>Add event</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={()=>this.setState({active:!this.state.active})} style={this.state.active?mainStyles.menuButton:styles.pauseButton}>
+                        <Text style={{color:'white',textAlign:'center'}}>{this.state.active?'Pause':'Resume'}</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={()=>Actions.main({user:this.props.user})} style={mainStyles.menuButton}>
+                      <Text style={{color:'white',textAlign:'center'}}>Close</Text>
+                    </TouchableHighlight>  
+                  </View>
               </View>
             </View>  
         )
     }
 }
-
+const styles = StyleSheet.create({
+  pauseButton:{
+    backgroundColor:'black',
+    padding:10,
+    zIndex:2,
+    width:200,
+    height:40
+  },
+    header:{
+    textAlign:'center',
+    fontSize:18,
+    marginBottom:10,
+    color:'black'
+  },
+  eventForm:{
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex:2,
+    paddingTop:60,
+  }
+});
 export default trackingScreen;

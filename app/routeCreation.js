@@ -32,11 +32,11 @@ class routeCreationScreen extends Component {
    async goToRoute() {
     if (this.validate(this.state.name,6)&&this.validate(this.state.type,4)&&this.validate(this.state.startDate,6)) {
       let token=await AsyncStorage.getItem('token');
-      let user=await AsyncStorage.getItem('user');
-      let userId=JSON.parse(user)._id;
-        this.createNewRoute(userId,token).then(function(response) {
+      let userFromStorage=await AsyncStorage.getItem('user');
+      let user=JSON.parse(userFromStorage);
+        this.createNewRoute(user._id,token).then(function(response) {
           let routeInfo=response.route;
-          Actions.tracking({route:routeInfo});
+          Actions.tracking({route:routeInfo,user:user});
          });
       } else {
         this.setState({errorType: !this.validate(this.state.type,4)});
@@ -50,6 +50,14 @@ class routeCreationScreen extends Component {
       return true;
    }
     createNewRoute(id,token) {
+       let convertDate= (str)=> {
+        if (str) {
+          let dateArr=str.split('-');
+          return new Date(dateArr[0], (dateArr[1]-1), dateArr[2]);
+        } else {
+          return '';
+        }
+       }
        return fetch('http://teethemes.com:3000/api/routes/',{
           method: 'POST',
           headers: {
@@ -63,8 +71,8 @@ class routeCreationScreen extends Component {
           owner:id,
           status:'planned',
           description: this.state.description,
-          startDate: this.state.startDate,
-          endDate: this.state.endDate
+          startDate: convertDate(this.state.startDate),
+          endDate: convertDate(this.state.endDate)
         })
         }).then((response) => response.json())
             .then((responseJSON) => {
