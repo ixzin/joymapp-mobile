@@ -58,12 +58,12 @@ class registerScreen extends Component {
               .then((responseJson) => {
                 if (responseJson.user) {
                    try {
-                      AsyncStorage.setItem('userId',responseJson.user._id);
+                      AsyncStorage.setItem('user',JSON.stringify(responseJson.user));
                     } catch (error) {
                       console.error(error);
                     }
                     this.setState({errorMessage:false});
-                    Actions.main({userId:responseJson.user._id});
+                    Actions.main({user:responseJson.user});
                 }
               })
               .catch((error) => {
