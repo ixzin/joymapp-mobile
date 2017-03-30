@@ -31,12 +31,43 @@ class trackingScreen extends Component {
                let positionCoordinate=[{latitude:this.state.lastPosition[0],longitude:this.state.lastPosition[1]}];  
                route=route.concat(positionCoordinate);
                this.setState({route});  
-            });
-            
+               if (route.length>2) {
+                  this.saveRoute(route).then(function(response) {
+                  console.log(response);
+                 });
+               }
+            });           
          }
          componentWillUnmount = () => {
             navigator.geolocation.clearWatch(this.watchID);
          }  
+         async saveRoute(points) {
+          let token=await AsyncStorage.getItem('token');
+            return fetch('http://teethemes.com:3000/api/routes/'+this.props.route._id,{
+              method: 'PUT',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'x-access-token':token
+            },
+            body: JSON.stringify({
+              type: this.props.route.type,
+              name: this.props.route.name,
+              owner:this.props.route.owner,
+              status:'planned',
+              description: this.props.route.description,
+              startDate: this.props.route.startDate,
+              endDate: this.props.route.endDate,
+              path:points
+            })
+            }).then((response) => response.json())
+                .then((responseJSON) => {
+                    return Promise.resolve(responseJSON);  
+                })
+                .catch((error) => {
+                  return Promise.reject(error);
+                });
+         }
     	render() {
     	return (
     		<View style={mainStyles.container}>
