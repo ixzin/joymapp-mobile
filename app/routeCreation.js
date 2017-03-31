@@ -20,17 +20,20 @@ import  mainStyles from './styles';
 class routeCreationScreen extends Component {
   constructor(props) {
     super(props);
+    let currentDate=new Date();
+    let formatCurrentDate=currentDate.getFullYear()+'-'+(currentDate.getMonth()+1)+'-'+currentDate.getDate();
     this.state = {
       name:'',
       type:'',
       description:'',
-      startDate:'',
-      endDate:'',
+      dateNow:formatCurrentDate,
+      startDate:formatCurrentDate,
+      endDate:formatCurrentDate,
       errorMessage:false
      }
    }
    async goToRoute() {
-    if (this.validate(this.state.name,6)&&this.validate(this.state.type,4)&&this.validate(this.state.startDate,6)) {
+    if (this.validate(this.state.name,6)&&this.validate(this.state.type,4)) {
       let token=await AsyncStorage.getItem('token');
       let userFromStorage=await AsyncStorage.getItem('user');
       let user=JSON.parse(userFromStorage);
@@ -50,14 +53,6 @@ class routeCreationScreen extends Component {
       return true;
    }
     createNewRoute(id,token) {
-       let convertDate= (str)=> {
-        if (str) {
-          let dateArr=str.split('-');
-          return new Date(dateArr[0], (dateArr[1]-1), dateArr[2]);
-        } else {
-          return '';
-        }
-       }
        return fetch('http://teethemes.com:3000/api/routes/',{
           method: 'POST',
           headers: {
@@ -71,8 +66,8 @@ class routeCreationScreen extends Component {
           owner:id,
           status:'planned',
           description: this.state.description,
-          startDate: convertDate(this.state.startDate),
-          endDate: convertDate(this.state.endDate)
+          startdate: this.state.startDate,
+          enddate: this.state.endDate
         })
         }).then((response) => response.json())
             .then((responseJSON) => {
@@ -102,7 +97,7 @@ class routeCreationScreen extends Component {
                   style={{height:60,minWidth:200,marginTop:0,marginBottom:10,color:'white'}}
                   onValueChange={(type) => this.setState({type: type})}>
                   <Picker.Item label="Choose type" value=""/>
-                  <Picker.Item label="hike" value="hike"/>
+                  <Picker.Item label="hike" value="trip"/>
                   <Picker.Item label="marine" value="marine" />
                   <Picker.Item label="auto" value="auto" />
                   <Picker.Item label="city" value="city" />
@@ -131,8 +126,8 @@ class routeCreationScreen extends Component {
                             mode="date"
                             placeholder='start date'
                             format="YYYY-MM-DD"
-                            minDate="1950-01-01"
-                            maxDate="2000-01-01"
+                            minDate={this.state.dateNow}
+                            maxDate="2050-01-01"
                             confirmBtnText="Confirm"
                             cancelBtnText="Cancel"
                             showIcon={false}
@@ -143,18 +138,23 @@ class routeCreationScreen extends Component {
                                 borderRightWidth:0,
                                 borderTopWidth:0,
                                 borderLeftWidth:0,
+                              },
+                              dateText:{
+                                color:'white',
+                                textAlign:'left',
+                                fontSize:18
                               }
                             }}
                             onDateChange={(startDate) => {this.setState({startDate: startDate})}}
                           />
                           <DatePicker
                             style={styles.dateInput}
-                            date={this.state.endtDate}
+                            date={this.state.endDate}
                             mode="date"
                             placeholder='end date'
                             format="YYYY-MM-DD"
-                            minDate="1950-01-01"
-                            maxDate="2000-01-01"
+                            minDate={this.state.dateNow}
+                            maxDate="2050-01-01"
                             confirmBtnText="Confirm"
                             cancelBtnText="Cancel"
                             showIcon={false}
@@ -165,9 +165,14 @@ class routeCreationScreen extends Component {
                                 borderRightWidth:0,
                                 borderTopWidth:0,
                                 borderLeftWidth:0,
+                              },
+                              dateText:{
+                                color:'white',    
+                                textAlign:'left',
+                                fontSize:18
                               }
                             }}
-                            onDateChange={(endtDate) => {this.setState({endtDate: endtDate})}}
+                            onDateChange={(endDate) => {this.setState({endDate: endDate})}}
                           />     
                  <TouchableHighlight onPress={()=>this.goToRoute()} style={mainStyles.Button}>
                       <Text style={{color:'white',textAlign:'center'}}>Go!</Text>

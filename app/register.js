@@ -157,6 +157,9 @@ class registerScreen extends Component {
                             borderRightWidth:0,
                             borderTopWidth:0,
                             borderLeftWidth:0,
+                          },
+                          dateText:{
+                            color:'white'
                           }
                         }}
                         onDateChange={(birthday) => {this.setState({birthday: birthday})}}

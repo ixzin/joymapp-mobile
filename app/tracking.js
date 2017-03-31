@@ -18,7 +18,7 @@ class trackingScreen extends Component {
     super(props);
     this.mapRef = null;
     this.state = {
-      lastPosition: 'unknown',
+      lastPosition: [0,0],
       route: [],
       active:true,
       zoom:false,
