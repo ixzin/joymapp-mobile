@@ -7,12 +7,15 @@ import {
   TextInput,
   Modal,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import MapView from 'react-native-maps';
 import  mainStyles from './styles';
 import mapStyles from './mapStyles';
+import Camera from 'react-native-camera';
+import renderIf from './renderif';
 class trackingScreen extends Component {
   constructor(props) {
     super(props);
@@ -24,9 +27,42 @@ class trackingScreen extends Component {
       zoom:false,
       showMap:false,
       mapStyle:mapStyles,
-      eventModal:false
+      eventModal:false,
+      cameraSwitch:false,
+      eventName:'',
+      eventDescription:''
      }
    }        
+     takePicture() {
+    const options = {};
+    //options.location = ...
+      this.camera.capture({metadata: options})
+        .then((data) => console.log(data))
+        .catch(err => console.error(err));
+        this.setState({
+            media:data.path 
+          })
+      }
+      startRecording = () => {
+        if (this.camera) {
+          this.camera.capture({mode: Camera.constants.CaptureMode.video})
+              .then((data) => console.log(data))
+              .catch(err => console.error(err));
+          this.setState({
+            isRecording: true,
+            media:data.path
+          });
+        }
+      }
+
+      stopRecording = () => {
+        if (this.camera) {
+          this.camera.stopCapture();
+          this.setState({
+            isRecording: false
+          });
+        }
+      }
      watchID = (null: ?number);
          componentDidMount = () => {
           let route=[];
@@ -49,7 +85,9 @@ class trackingScreen extends Component {
          }
          componentWillUnmount = () => {
             navigator.geolocation.clearWatch(this.watchID);
-         }  
+         }
+         async saveEvent() {
+         }
          async saveRoute(points) {
           let token=await AsyncStorage.getItem('token');
             return fetch('http://teethemes.com:3000/api/routes/'+this.props.route._id,{
@@ -84,32 +122,68 @@ class trackingScreen extends Component {
                <View>
                   <Modal
                     animationType={"fade"}
-                    transparent={false}
+                    transparent={true}
                     visible={this.state.eventModal}
                     onRequestClose={() => {alert("Modal has been closed.")}}
-                    style={{width:300,height:500,padding:20}}
                     >
-                    <View style={mainStyles.container}>
-                      <Text style={styles.header}>Modal</Text>
-                      <View style={styles.eventForm}>
+                    {renderIf(this.state.cameraSwitch,
+                     <Camera
+                        ref={(cam) => {
+                          this.camera = cam;
+                        }}
+                        style={styles.preview}
+                        aspect={Camera.constants.Aspect.fill}>
+                        <TouchableWithoutFeedback style={styles.actionsCapture} onPress={this.takePicture.bind(this)}>
+                           <View>
+                              <Text style={{color:'white',textAlign:'center'}}>Capture</Text>
+                            </View>         
+                        </TouchableWithoutFeedback>
+                         <TouchableWithoutFeedback style={styles.actionsCapture} onPress={this.startRecording.bind(this)}>
+                            <View>
+                              <Text style={{color:'white',textAlign:'center'}}>Start record</Text>
+                            </View>  
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback style={styles.actionsCapture} onPress={this.stopRecording.bind(this)}>
+                            <View>
+                              <Text style={{color:'white',textAlign:'center'}}>Stop record</Text>
+                            </View>  
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback style={styles.actionsCapture} onPress={()=>this.setState({cameraSwitch:false})}>
+                            <View>
+                              <Text style={{color:'white',textAlign:'center'}}>Cancel</Text>
+                            </View> 
+                        </TouchableWithoutFeedback>
+                      </Camera>
+                      )}
+                    <View style={{ flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center'}}>                      
+                     <View style={styles.eventForm}>
+                          <Text style={styles.header}>Add new</Text>
                            <TextInput
-                              style={mainStyles.input}
+                              style={styles.input}
                               placeholder="Title"
-                              placeholderTextColor="white"
+                              placeholderTextColor="#5e6973"
                               onChangeText={(eventDescription) => this.setState({eventName})}
                             />
                             <TextInput
-                              style={mainStyles.textarea}
+                              style={styles.textarea}
                               multiline={true}
-                              numberOfLines={4}
+                              numberOfLines={3}
                               placeholder="Description"
-                              placeholderTextColor="white"
+                              placeholderTextColor="#5e6973"
                               onChangeText={(eventDescription) => this.setState({eventDescription})}                 
                             />
-                            <View>
+                            <View style={styles.contentWrapper}>
                                 <TouchableHighlight style={mainStyles.menuButton}>
                                     <Text style={{color:'white',textAlign:'center'}}>Add event</Text>
                                 </TouchableHighlight>
+                                <TouchableHighlight onPress={()=>this.setState({cameraSwitch:true})} style={styles.pauseButton}>
+                                  <Text style={{color:'white',textAlign:'center'}}>Camera on</Text>
+                                </TouchableHighlight> 
+                                <TouchableHighlight onPress={()=>this.saveEvent()} style={styles.pauseButton}>
+                                  <Text style={{color:'white',textAlign:'center'}}>Save</Text>
+                                </TouchableHighlight>   
                                 <TouchableHighlight onPress={()=>this.setState({eventModal:false})} style={styles.pauseButton}>
                                   <Text style={{color:'white',textAlign:'center'}}>Close</Text>
                                 </TouchableHighlight>  
@@ -157,21 +231,65 @@ const styles = StyleSheet.create({
     padding:10,
     zIndex:2,
     width:200,
-    height:40
+    height:40,
+    marginBottom:10
   },
     header:{
     textAlign:'center',
     fontSize:18,
     marginBottom:10,
-    color:'black'
+    color:'#5e6973'
+  },
+  input:{
+   color:'#5e6973',
+   height:40,
+   borderBottomWidth:1,
+   minWidth:200,
+   borderColor:'#5e6973',
+   textAlign:'left',
+   fontSize:18,
+   marginTop:0,
+   marginBottom:10
+  },
+  textarea:{
+    color:'#5e6973',
+    borderColor:'#5e6973',
+    borderWidth:1,
+    minWidth:200,
+    textAlign:'left',
+    fontSize:18,
+    marginTop:0,
+    marginBottom:10
   },
   eventForm:{
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex:2,
-    paddingTop:60,
+    zIndex:3,
+    width:300,
+    minHeight:400,
+    backgroundColor:'#eaeaea',
+    padding:20,
+  },
+  contentWrapper:{
+    flex:1,
+    flexDirection:'column',
+    alignItems:'center'
+  },
+  preview:{
+      flex:1,
+      flexDirection:'row',
+      position:'absolute',
+      zIndex:99,
+      top:0,
+      bottom:0,
+      height:null,
+      width:null,
+      right:0,
+      left:0
+  },
+  actionsCapture:{
+    position:'absolute',
+    zIndex:100,
+    bottom:0,
+    marginRight:10
   }
 });
 export default trackingScreen;

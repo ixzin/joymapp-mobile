@@ -23,8 +23,7 @@ const mainStyles = StyleSheet.create({
 	  container: {
 	    flex: 1,
 	    justifyContent: 'center',
-	    alignItems: 'center',
-	    backgroundColor: '#bb0000',
+	    alignItems: 'center'
 	  },
 	  header:{
 	    fontSize:28,
@@ -33,54 +32,51 @@ const mainStyles = StyleSheet.create({
 	    height:60,
 	    zIndex:3
 	  },
-	    input:{
-    color:'white',
-    height:40,
-    borderBottomWidth:2,
-    minWidth:200,
-    borderColor:'white',
-    textAlign:'left',
-    fontSize:18,
-    marginTop:0,
-    marginBottom:10
-  },
-  textarea:{
-  	color:'white',
-    borderBottomWidth:2,
-    borderTopWidth:2,
-    borderLeftWidth:2,
-    borderRightWidth:2,
-    minWidth:200,
-    borderColor:'white',
-    textAlign:'left',
-    fontSize:18,
-    marginTop:0,
-    marginBottom:10
-  },
-	Button:{
-    backgroundColor:'#ea2e49',
-    padding:10,
-    zIndex:2,
-    width:200,
-    height:40
-  },
-  	menuButton:{
-    backgroundColor:'#ea2e49',
-    padding:10,
-    zIndex:2,
-    width:200,
-    height:40,
-    marginBottom:10
-  },
-  errorPopup:{
-  	position:'absolute',
-  	top:0,
-  	left:0,
-  	right:0,
-  	backgroundColor: '#ea2e49',
-  	padding:10,
-  	zIndex:9
-  }
+	input:{
+	    color:'white',
+	    height:40,
+	    borderBottomWidth:2,
+	    minWidth:200,
+	    borderColor:'white',
+	    textAlign:'left',
+	    fontSize:18,
+	    marginTop:0,
+	    marginBottom:10
+	},
+	  textarea:{
+	  	color:'white',
+	    borderColor:'white',
+	    borderWidth:2,
+	    minWidth:200,
+	    textAlign:'left',
+	    fontSize:18,
+	    marginTop:0,
+	    marginBottom:10
+	  },
+		Button:{
+	    backgroundColor:'#ea2e49',
+	    padding:10,
+	    zIndex:2,
+	    width:200,
+	    height:40
+	  },
+	  	menuButton:{
+	    backgroundColor:'#ea2e49',
+	    padding:10,
+	    zIndex:2,
+	    width:200,
+	    height:40,
+	    marginBottom:10
+	  },
+	  errorPopup:{
+	  	position:'absolute',
+	  	top:0,
+	  	left:0,
+	  	right:0,
+	  	backgroundColor: '#ea2e49',
+	  	padding:10,
+	  	zIndex:9
+	  }
  });
 
 export default mainStyles;

@@ -77,7 +77,7 @@ class mainScreen extends Component {
                     </View>
                   );
                 })}
-                <View style={{flex:1,flexDirection:'column',alignItems:'center'}}>
+                <View style={styles.contentWrapper}>
                 <TouchableHighlight onPress={Actions.creation}  style={mainStyles.menuButton}>
                   <Text style={{color:'white',textAlign:'center'}}>Create new route</Text>
                 </TouchableHighlight>
@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
   routeContainer:{
     flex: 1, 
     flexDirection: 'row',
+    alignItems:'center',
     height:60,
     margin:0
   },
