@@ -16,6 +16,7 @@ import  mainStyles from './styles';
 import mapStyles from './mapStyles';
 import Camera from 'react-native-camera';
 import renderIf from './renderif';
+import Icon from './icon'; 
 class trackingScreen extends Component {
   constructor(props) {
     super(props);
@@ -23,6 +24,9 @@ class trackingScreen extends Component {
     this.state = {
       lastPosition: [0,0],
       route: [],
+      points:[],
+      events:[],
+      timer:0,
       active:true,
       zoom:false,
       showMap:false,
@@ -30,27 +34,33 @@ class trackingScreen extends Component {
       eventModal:false,
       cameraSwitch:false,
       eventName:'',
-      eventDescription:''
+      eventDescription:'',
      }
    }        
-     takePicture() {
+     takePicture=()=> {
     const options = {};
     //options.location = ...
       this.camera.capture({metadata: options})
-        .then((data) => console.log(data))
+        .then((data) =>{console.log(data);this.setState({media:data.path})})
         .catch(err => console.error(err));
-        this.setState({
-            media:data.path 
-          })
+
       }
+      counter = (func)=>{setInterval(func, 1000);}
       startRecording = () => {
         if (this.camera) {
           this.camera.capture({mode: Camera.constants.CaptureMode.video})
               .then((data) => console.log(data))
               .catch(err => console.error(err));
+          
+          myTimer=()=> {
+              let timer=this.state.timer+1;
+              console.log(timer);
+              this.setState({timer})
+          }
+          this.counter(myTimer);
           this.setState({
             isRecording: true,
-            media:data.path
+            timer:0
           });
         }
       }
@@ -61,34 +71,15 @@ class trackingScreen extends Component {
           this.setState({
             isRecording: false
           });
+          clearInterval(this.counter);
         }
       }
-     watchID = (null: ?number);
-         componentDidMount = () => {
-          let route=[];
-          let points=[];
-            this.watchID = navigator.geolocation.watchPosition((position) => {
-              if (this.state.active) {
-                 let lastPosition =[position.coords.latitude,position.coords.longitude];                           
-                 this.setState({lastPosition});
-                 let positionCoordinate=[{latitude:this.state.lastPosition[0],longitude:this.state.lastPosition[1]}];  
-                 route=route.concat(positionCoordinate);
-                 points.push(lastPosition);
-                 this.setState({route});  
-                 if (route.length>2) {
-                    this.saveRoute(points).then(function(response) {
-                    console.log(response);
-                   });
-                 }
-              }
-            });           
-         }
-         componentWillUnmount = () => {
-            navigator.geolocation.clearWatch(this.watchID);
-         }
-         async saveEvent() {
-         }
-         async saveRoute(points) {
+    async saveEvent() {
+          let event={label:this.state.eventName,description:this.state.eventDescription};
+          let events=this.state.events;
+          events.push(event);
+          this.setState({events});
+          console.log(event);
           let token=await AsyncStorage.getItem('token');
             return fetch('http://teethemes.com:3000/api/routes/'+this.props.route._id,{
               method: 'PUT',
@@ -105,7 +96,59 @@ class trackingScreen extends Component {
               description: this.props.route.description,
               startdate: this.props.route.startdate,
               enddate: this.props.route.startdate,
-              path:points
+              events:this.state.events,
+              path:this.state.points
+            })
+            }).then((response) => response.json())
+                .then((responseJSON) => {
+                    console.log(responseJSON);  
+                })
+                .catch((error) => {
+                  return Promise.reject(error);
+                });
+    }
+     watchID = (null: ?number);
+         componentDidMount = () => {
+          let route=[];
+          let points=[];
+            this.watchID = navigator.geolocation.watchPosition((position) => {
+              if (this.state.active) {
+                 let lastPosition =[position.coords.latitude,position.coords.longitude];                           
+                 this.setState({lastPosition});
+                 let positionCoordinate=[{latitude:this.state.lastPosition[0],longitude:this.state.lastPosition[1]}];  
+                 route=route.concat(positionCoordinate);
+                 points.push(lastPosition);
+                 this.setState({route}); 
+                 this.setState({points});  
+                 if (route.length>2) {
+                    this.saveRoute().then(function(response) {
+                    console.log(response);
+                   });
+                 }
+              }
+            });           
+         }
+         componentWillUnmount = () => {
+            navigator.geolocation.clearWatch(this.watchID);
+         }
+         async saveRoute() {
+          let token=await AsyncStorage.getItem('token');
+            return fetch('http://teethemes.com:3000/api/routes/'+this.props.route._id,{
+              method: 'PUT',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'x-access-token':token
+            },
+            body: JSON.stringify({
+              type: this.props.route.type,
+              name: this.props.route.name,
+              owner:this.props.route.owner,
+              status:'active',
+              description: this.props.route.description,
+              startdate: this.props.route.startdate,
+              enddate: this.props.route.startdate,
+              path:this.state.points
             })
             }).then((response) => response.json())
                 .then((responseJSON) => {
@@ -132,27 +175,45 @@ class trackingScreen extends Component {
                           this.camera = cam;
                         }}
                         style={styles.preview}
-                        aspect={Camera.constants.Aspect.fill}>
-                        <TouchableWithoutFeedback style={styles.actionsCapture} onPress={this.takePicture.bind(this)}>
-                           <View>
-                              <Text style={{color:'white',textAlign:'center'}}>Capture</Text>
-                            </View>         
-                        </TouchableWithoutFeedback>
-                         <TouchableWithoutFeedback style={styles.actionsCapture} onPress={this.startRecording.bind(this)}>
-                            <View>
-                              <Text style={{color:'white',textAlign:'center'}}>Start record</Text>
-                            </View>  
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback style={styles.actionsCapture} onPress={this.stopRecording.bind(this)}>
-                            <View>
-                              <Text style={{color:'white',textAlign:'center'}}>Stop record</Text>
-                            </View>  
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback style={styles.actionsCapture} onPress={()=>this.setState({cameraSwitch:false})}>
-                            <View>
-                              <Text style={{color:'white',textAlign:'center'}}>Cancel</Text>
-                            </View> 
-                        </TouchableWithoutFeedback>
+                        aspect={Camera.constants.Aspect.fill}>                      
+                          <TouchableWithoutFeedback onPress={this.takePicture.bind(this)}>                           
+                             <View>
+                                {renderIf(!this.state.isRecording,
+                                <Icon name="Photo" width="50" height="50" fill="#fff"/>
+                                 )}  
+                              </View>                                   
+                          </TouchableWithoutFeedback>
+                           <TouchableWithoutFeedback  onPress={this.startRecording.bind(this)}>                        
+                                <View>
+                                {renderIf(!this.state.isRecording,
+                                  <Icon name="Video" width="50" height="50" fill="#fff"/>
+                                   )}
+                                {renderIf(this.state.isRecording,
+                                    <Text style={styles.timer}>{this.state.timer}</Text>
+                                   )}
+                                </View>                               
+                          </TouchableWithoutFeedback>
+                           <TouchableWithoutFeedback onPress={this.stopRecording.bind(this)}>
+                              <View>
+                                {renderIf(this.state.isRecording,
+                                <Icon name="Rec" width="50" height="50" fill="red"/>
+                                )} 
+                              </View>                             
+                          </TouchableWithoutFeedback>
+                          <TouchableWithoutFeedback onPress={this.stopRecording.bind(this)}>
+                              
+                              <View>
+                                {renderIf(this.state.isRecording,
+                                <Icon name="Stop" width="50" height="50" fill="#fff"/>
+                                 )}
+                              </View>  
+                             
+                          </TouchableWithoutFeedback>
+                          <TouchableWithoutFeedback onPress={()=>this.setState({cameraSwitch:false})}>
+                              <View>
+                                 <Icon name="Cancel" width="50" height="50" fill="#fff"/>
+                              </View> 
+                          </TouchableWithoutFeedback>             
                       </Camera>
                       )}
                     <View style={{ flex: 1,
@@ -164,7 +225,7 @@ class trackingScreen extends Component {
                               style={styles.input}
                               placeholder="Title"
                               placeholderTextColor="#5e6973"
-                              onChangeText={(eventDescription) => this.setState({eventName})}
+                              onChangeText={(eventName) => this.setState({eventName})}
                             />
                             <TextInput
                               style={styles.textarea}
@@ -175,16 +236,13 @@ class trackingScreen extends Component {
                               onChangeText={(eventDescription) => this.setState({eventDescription})}                 
                             />
                             <View style={styles.contentWrapper}>
-                                <TouchableHighlight style={mainStyles.menuButton}>
+                                <TouchableHighlight onPress={()=>this.saveEvent()} style={mainStyles.menuButton}>
                                     <Text style={{color:'white',textAlign:'center'}}>Add event</Text>
                                 </TouchableHighlight>
                                 <TouchableHighlight onPress={()=>this.setState({cameraSwitch:true})} style={styles.pauseButton}>
                                   <Text style={{color:'white',textAlign:'center'}}>Camera on</Text>
-                                </TouchableHighlight> 
-                                <TouchableHighlight onPress={()=>this.saveEvent()} style={styles.pauseButton}>
-                                  <Text style={{color:'white',textAlign:'center'}}>Save</Text>
                                 </TouchableHighlight>   
-                                <TouchableHighlight onPress={()=>this.setState({eventModal:false})} style={styles.pauseButton}>
+                                <TouchableHighlight onPress={()=>this.setState({eventModal:false})} style={mainStyles.menuButton}>
                                   <Text style={{color:'white',textAlign:'center'}}>Close</Text>
                                 </TouchableHighlight>  
                             </View>
@@ -276,6 +334,8 @@ const styles = StyleSheet.create({
   preview:{
       flex:1,
       flexDirection:'row',
+      alignItems:'flex-end',
+      justifyContent:'center',
       position:'absolute',
       zIndex:99,
       top:0,
@@ -285,11 +345,11 @@ const styles = StyleSheet.create({
       right:0,
       left:0
   },
-  actionsCapture:{
-    position:'absolute',
-    zIndex:100,
-    bottom:0,
-    marginRight:10
+  timer:{
+    fontSize:18,
+    color:'white',
+    marginTop:-20,
+    marginRight:20
   }
 });
 export default trackingScreen;
