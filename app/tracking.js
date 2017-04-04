@@ -7,6 +7,7 @@ import {
   TextInput,
   Modal,
   TouchableHighlight,
+  ScrollView,
   TouchableWithoutFeedback,
   View
 } from 'react-native';
@@ -35,13 +36,17 @@ class trackingScreen extends Component {
       cameraSwitch:false,
       eventName:'',
       eventDescription:'',
+      media:[]
      }
    }        
      takePicture=()=> {
     const options = {};
     //options.location = ...
       this.camera.capture({metadata: options})
-        .then((data) =>{console.log(data);this.setState({media:data.path})})
+        .then((data) =>{
+          console.log(data);
+          this.state.media.push(data);
+        })
         .catch(err => console.error(err));
 
       }
@@ -49,7 +54,9 @@ class trackingScreen extends Component {
       startRecording = () => {
         if (this.camera) {
           this.camera.capture({mode: Camera.constants.CaptureMode.video})
-              .then((data) => console.log(data))
+              .then((data) => {console.log(data);
+                this.state.media.push(data);
+              })
               .catch(err => console.error(err));
          
           func=()=> {
@@ -80,8 +87,17 @@ class trackingScreen extends Component {
           
         }
       }
+      formTimer(num) {
+        return Math.floor(num / 60) + ' : ' + num % 60;
+      }
+      deleteMedia=(index)=> {
+        let media=this.state.media;
+        media.splice(index,1);
+        this.setState({media});
+      }
     async saveEvent() {
-          let event={label:this.state.eventName,description:this.state.eventDescription};
+          let point=this.state.points[this.state.points.length-1];
+          let event={label:this.state.eventName,description:this.state.eventDescription,point:point};
           let events=this.state.events;
           events.push(event);
           this.setState({events});
@@ -170,13 +186,10 @@ class trackingScreen extends Component {
                <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
                <View>
                   <Modal
-                    animationType={"fade"}
-                    transparent={true}
-                    visible={this.state.eventModal}
-                    onRequestClose={() => {alert("Modal has been closed.")}}
-                    >
-                    {renderIf(this.state.cameraSwitch,
-                     <Camera
+                  visible={this.state.cameraSwitch}
+                  onRequestClose={() => {console.log("Modal has been closed.")}}
+                  >
+                    <Camera
                         ref={(cam) => {
                           this.camera = cam;
                         }}
@@ -189,74 +202,105 @@ class trackingScreen extends Component {
                                  )}  
                               </View>                                   
                           </TouchableWithoutFeedback>
+                          <TouchableWithoutFeedback>
+                              <View>
+                                {renderIf(this.state.isRecording,
+                                    <Text style={styles.timer}>{this.formTimer(this.state.timer)}</Text>
+                                )}  
+                              </View>
+                          </TouchableWithoutFeedback>     
                            <TouchableWithoutFeedback  onPress={this.startRecording.bind(this)}>                        
                                 <View>
                                 {renderIf(!this.state.isRecording,
                                   <Icon name="Video" width="50" height="50" fill="#fff"/>
                                    )}
-                                {renderIf(this.state.isRecording,
-                                    <Text style={styles.timer}>{this.state.timer}</Text>
-                                   )}
                                 </View>                               
                           </TouchableWithoutFeedback>
-                           <TouchableWithoutFeedback onPress={this.stopRecording.bind(this)}>
+                           <TouchableWithoutFeedback>
                               <View>
                                 {renderIf(this.state.isRecording,
                                 <Icon name="Rec" width="50" height="50" fill="red"/>
                                 )} 
                               </View>                             
                           </TouchableWithoutFeedback>
-                          <TouchableWithoutFeedback onPress={this.stopRecording.bind(this)}>
-                              
+                          <TouchableWithoutFeedback onPress={this.stopRecording.bind(this)}>                             
                               <View>
                                 {renderIf(this.state.isRecording,
                                 <Icon name="Stop" width="50" height="50" fill="#fff"/>
                                  )}
-                              </View>  
-                             
+                              </View>                            
                           </TouchableWithoutFeedback>
-                          <TouchableWithoutFeedback onPress={()=>this.setState({cameraSwitch:false})}>
+                          <TouchableWithoutFeedback onPress={()=>{this.stopRecording.bind(this);this.setState({cameraSwitch:false})}}>
                               <View>
                                  <Icon name="Cancel" width="50" height="50" fill="#fff"/>
                               </View> 
                           </TouchableWithoutFeedback>             
                       </Camera>
-                      )}
-                    <View style={{ flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center'}}>                      
-                     <View style={styles.eventForm}>
-                          <Text style={styles.header}>Add new</Text>
-                           <TextInput
-                              style={styles.input}
-                              placeholder="Title"
-                              placeholderTextColor="#5e6973"
-                              onChangeText={(eventName) => this.setState({eventName})}
-                            />
-                            <TextInput
-                              style={styles.textarea}
-                              multiline={true}
-                              numberOfLines={3}
-                              placeholder="Description"
-                              placeholderTextColor="#5e6973"
-                              onChangeText={(eventDescription) => this.setState({eventDescription})}                 
-                            />
-                            <View style={styles.contentWrapper}>
-                                <TouchableHighlight onPress={()=>this.saveEvent()} style={mainStyles.menuButton}>
-                                    <Text style={{color:'white',textAlign:'center'}}>Add event</Text>
-                                </TouchableHighlight>
-                                <TouchableHighlight onPress={()=>this.setState({cameraSwitch:true})} style={styles.pauseButton}>
-                                  <Text style={{color:'white',textAlign:'center'}}>Camera on</Text>
-                                </TouchableHighlight>   
-                                <TouchableHighlight onPress={()=>this.setState({eventModal:false})} style={mainStyles.menuButton}>
-                                  <Text style={{color:'white',textAlign:'center'}}>Close</Text>
-                                </TouchableHighlight>  
-                            </View>
+                    </Modal>  
+                  <Modal
+                    animationType={"fade"}
+                    transparent={true}
+                    visible={this.state.eventModal}
+                    onRequestClose={() => {console.log("Modal has been closed.")}}
+                    >
+                    <ScrollView>
+                      <View style={{ flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center'}}>                      
+                       <View style={styles.eventForm}>
+                            <Text style={styles.header}>Add new</Text>
+                             <TextInput
+                                style={styles.input}
+                                placeholder="Title"
+                                placeholderTextColor="#5e6973"
+                                onChangeText={(eventName) => this.setState({eventName})}
+                              />
+                              <TextInput
+                                style={styles.textarea}
+                                multiline={true}
+                                numberOfLines={3}
+                                placeholder="Description"
+                                placeholderTextColor="#5e6973"
+                                onChangeText={(eventDescription) => this.setState({eventDescription})}                 
+                              />
+                              {renderIf(this.state.media.length>0,
+                                <View style={styles.contentWrapper}>
+                                  <Text style={styles.header}>Media</Text>   
+                                  <View style={styles.imageContainer}>                                                            
+                                    {this.state.media.map(function(file, i){
+                                      return(
+                                        <View key={i} style={styles.mediaItemWrapper}>
+                                            <View style={styles.mediaItem}>
+                                              <Image style={styles.mediaImage} source={{uri:file.path}}/>
+                                              <TouchableWithoutFeedback onPress={()=>this.deleteMedia(i)}>
+                                                <View>
+                                                    <Icon name="Cross" width="10" height="10" fill="black"/>
+                                                </View>
+                                              </TouchableWithoutFeedback>
+                                            </View>
+                                        </View>
+                                      );
+                                    },this)}
+                                  </View>
+                                </View>
+                              )}
+                              <View style={styles.contentWrapper}>
+                                  <TouchableHighlight onPress={()=>this.saveEvent()} style={mainStyles.menuButton}>
+                                      <Text style={{color:'white',textAlign:'center'}}>Add event</Text>
+                                  </TouchableHighlight>
+                                  <TouchableHighlight onPress={()=>this.setState({cameraSwitch:true})} style={mainStyles.menuButton}>
+                                    <Text style={{color:'white',textAlign:'center'}}>Camera on</Text>
+                                  </TouchableHighlight>   
+                                  <TouchableHighlight onPress={()=>this.setState({eventModal:false})} style={mainStyles.menuButton}>
+                                    <Text style={{color:'white',textAlign:'center'}}>Close</Text>
+                                  </TouchableHighlight>  
+                              </View>
+                        </View>
                       </View>
-                    </View>
+                     </ScrollView> 
                   </Modal>    
                 <MapView
-                      style={{marginLeft:20,marginRight:20,height:300,width:300}}
+                      style={{margin:20,height:300,width:300}}
                       showsUserLocation={true}
                       initialRegion={{
                         latitude: this.state.lastPosition[0],
@@ -328,7 +372,7 @@ const styles = StyleSheet.create({
   eventForm:{
     zIndex:3,
     width:300,
-    minHeight:400,
+    marginTop:20,
     backgroundColor:'#eaeaea',
     padding:20,
   },
@@ -337,6 +381,16 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     alignItems:'center'
   },
+  imageContainer:{
+    flex:1,
+    flexDirection:'row',
+    flexWrap:'wrap',
+    alignItems: 'center',
+    marginBottom:10
+  },
+  mediaItemWrapper:{width:120,height:110},
+  mediaItem:{flex:1,flexDirection:'row',marginLeft:5},
+  mediaImage:{width:100,height:100,marginRight:5},
   preview:{
       flex:1,
       flexDirection:'row',
@@ -352,8 +406,10 @@ const styles = StyleSheet.create({
       left:0
   },
   timer:{
-    fontSize:18,
+    fontSize:24,
     color:'white',
+    height:45,
+    marginRight:15
   }
 });
 export default trackingScreen;

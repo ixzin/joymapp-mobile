@@ -17,8 +17,8 @@ class introScreen extends Component {
         .then( (value) =>{
             if (value != null){
               let userObj=JSON.parse(value);
-              //Actions.main({user:userObj});
-              let routeInfo={
+              Actions.main({user:userObj});
+              /*let routeInfo={
                     "name" : "ASfafsdgdfg",
                     "description" : "sdfdsfsdfsd",
                     "owner" : "588fa0279b7ae217f32088e7",
@@ -27,8 +27,8 @@ class introScreen extends Component {
                     "_id" : "58e1ef662493b06649331a27",
                     "enddate" : "2017-04-03",
                     "startdate" :"2017-04-03"
-              }
-            Actions.tracking({route:routeInfo,user:userObj});
+              }*/
+            //Actions.tracking({route:routeInfo,user:userObj});
             } else{
               Actions.login({type:'reset'});
             }
