@@ -45,22 +45,27 @@ class trackingScreen extends Component {
         .catch(err => console.error(err));
 
       }
-      counter = (func)=>{setInterval(func, 1000);}
+      
       startRecording = () => {
         if (this.camera) {
           this.camera.capture({mode: Camera.constants.CaptureMode.video})
               .then((data) => console.log(data))
               .catch(err => console.error(err));
-          
-          myTimer=()=> {
+         
+          func=()=> {
               let timer=this.state.timer+1;
               console.log(timer);
-              this.setState({timer})
+              this.setState({timer});
+              if (!this.state.isRecording) {
+                clearInterval(counter);
+              }
           }
-          this.counter(myTimer);
+          counter = setInterval(function() {
+            func();
+
+          }, 1000); 
           this.setState({
-            isRecording: true,
-            timer:0
+            isRecording: true
           });
         }
       }
@@ -69,9 +74,10 @@ class trackingScreen extends Component {
         if (this.camera) {
           this.camera.stopCapture();
           this.setState({
-            isRecording: false
+            isRecording: false,
+            timer:0
           });
-          clearInterval(this.counter);
+          
         }
       }
     async saveEvent() {
@@ -348,8 +354,6 @@ const styles = StyleSheet.create({
   timer:{
     fontSize:18,
     color:'white',
-    marginTop:-20,
-    marginRight:20
   }
 });
 export default trackingScreen;
