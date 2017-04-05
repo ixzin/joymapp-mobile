@@ -184,7 +184,7 @@ class trackingScreen extends Component {
     	return (
     		<View style={mainStyles.container}>
                <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
-               <View>
+               
                   <Modal
                   visible={this.state.cameraSwitch}
                   onRequestClose={() => {console.log("Modal has been closed.")}}
@@ -209,7 +209,7 @@ class trackingScreen extends Component {
                                 )}  
                               </View>
                           </TouchableWithoutFeedback>     
-                           <TouchableWithoutFeedback  onPress={this.startRecording.bind(this)}>                        
+                           <TouchableWithoutFeedback onPress={this.startRecording.bind(this)}>                        
                                 <View>
                                 {renderIf(!this.state.isRecording,
                                   <Icon name="Video" width="50" height="50" fill="#fff"/>
@@ -217,14 +217,14 @@ class trackingScreen extends Component {
                                 </View>                               
                           </TouchableWithoutFeedback>
                            <TouchableWithoutFeedback>
-                              <View>
+                              <View style={{marginRight:10}}>
                                 {renderIf(this.state.isRecording,
                                 <Icon name="Rec" width="50" height="50" fill="red"/>
                                 )} 
                               </View>                             
                           </TouchableWithoutFeedback>
                           <TouchableWithoutFeedback onPress={this.stopRecording.bind(this)}>                             
-                              <View>
+                              <View style={{marginRight:10}}>
                                 {renderIf(this.state.isRecording,
                                 <Icon name="Stop" width="50" height="50" fill="#fff"/>
                                  )}
@@ -298,37 +298,39 @@ class trackingScreen extends Component {
                         </View>
                       </View>
                      </ScrollView> 
-                  </Modal>    
-                <MapView
-                      style={{margin:20,height:300,width:300}}
-                      showsUserLocation={true}
-                      initialRegion={{
-                        latitude: this.state.lastPosition[0],
-                        longitude:this.state.lastPosition[1],
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                      }}
-                      ref={(ref) => { this.mapRef = ref }}
-                      onLayout = {() => this.mapRef.fitToCoordinates(this.state.route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false })}
-                      customMapStyle={this.state.mapStyle }
-                    >
-                        <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
-                    </MapView>              
-                  <Text>
-                    {this.state.lastPosition[0]}, {this.state.lastPosition[1]}
-                  </Text>
-                  <View style={{flex:1,flexDirection:'column',alignItems:'center'}}>
-                    <TouchableHighlight onPress={()=>this.setState({eventModal:true})} style={mainStyles.menuButton}>
-                        <Text style={{color:'white',textAlign:'center'}}>Add event</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={()=>this.setState({active:!this.state.active})} style={this.state.active?mainStyles.menuButton:styles.pauseButton}>
-                        <Text style={{color:'white',textAlign:'center'}}>{this.state.active?'Pause':'Resume'}</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={()=>Actions.main({user:this.props.user})} style={mainStyles.menuButton}>
-                      <Text style={{color:'white',textAlign:'center'}}>Close</Text>
-                    </TouchableHighlight>  
-                  </View>
-              </View>
+                  </Modal>
+                    <View style={{margin:20,borderWidth:2,borderColor:'#ea2e49'}}>   
+                      <MapView
+                          style={{height:300,width:300}}
+                          showsUserLocation={true}
+                          initialRegion={{
+                            latitude: this.state.lastPosition[0],
+                            longitude:this.state.lastPosition[1],
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                          }}
+                          ref={(ref) => { this.mapRef = ref }}
+                          onLayout = {() => this.mapRef.fitToCoordinates(this.state.route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false })}
+                          customMapStyle={this.state.mapStyle }
+                        >
+                            <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
+                        </MapView>
+                        <Text style={{width:0,height:0}}>
+                          {this.state.lastPosition[0]}, {this.state.lastPosition[1]}
+                        </Text>
+                     </View>                              
+                    <View style={{flex:1,flexDirection:'column',alignItems:'center'}}>
+                      <Text style={styles.header}>{this.props.route.name}</Text>
+                      <TouchableHighlight onPress={()=>this.setState({eventModal:true})} style={mainStyles.menuButton}>
+                          <Text style={{color:'white',textAlign:'center'}}>Add event</Text>
+                      </TouchableHighlight>
+                      <TouchableHighlight onPress={()=>this.setState({active:!this.state.active})} style={this.state.active?mainStyles.menuButton:styles.pauseButton}>
+                          <Text style={{color:'white',textAlign:'center'}}>{this.state.active?'Pause':'Resume'}</Text>
+                      </TouchableHighlight>
+                      <TouchableHighlight onPress={()=>Actions.main({user:this.props.user})} style={mainStyles.menuButton}>
+                        <Text style={{color:'white',textAlign:'center'}}>Close</Text>
+                      </TouchableHighlight>  
+                    </View>
             </View>  
         )
     }

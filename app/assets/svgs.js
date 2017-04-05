@@ -70,7 +70,7 @@ export default {
 	},
 	Rec:{
 		svg:
-		<Circle cx="20" cy="20" r="20"/>,
+		<Circle cx="20" cy="20" r="16"/>,
 		width:'50',
 		height:'50',
 		viewBox: '0 0 50 50'
