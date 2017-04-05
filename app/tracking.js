@@ -23,7 +23,7 @@ class trackingScreen extends Component {
     super(props);
     this.mapRef = null;
     this.state = {
-      lastPosition: [0,0],
+      lastPosition:'undefined',
       route: [],
       points:[],
       events:[],
@@ -40,15 +40,14 @@ class trackingScreen extends Component {
      }
    }        
      takePicture=()=> {
-    const options = {};
-    //options.location = ...
-      this.camera.capture({metadata: options})
-        .then((data) =>{
-          console.log(data);
-          this.state.media.push(data);
-        })
-        .catch(err => console.error(err));
-
+      const options = {};
+      //options.location = ...
+        this.camera.capture({metadata: options})
+          .then((data) =>{
+            console.log(data);
+            this.state.media.push(data);
+          })
+          .catch(err => console.error(err));
       }
       
       startRecording = () => {
@@ -184,7 +183,7 @@ class trackingScreen extends Component {
     	return (
     		<View style={mainStyles.container}>
                <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
-               
+                <View style={this.state.eventModal?styles.Overlay:''}></View>
                   <Modal
                   visible={this.state.cameraSwitch}
                   onRequestClose={() => {console.log("Modal has been closed.")}}
@@ -299,7 +298,8 @@ class trackingScreen extends Component {
                       </View>
                      </ScrollView> 
                   </Modal>
-                    <View style={{margin:20,borderWidth:2,borderColor:'#ea2e49'}}>   
+                  {renderIf(this.state.lastPosition!='undefined',
+                    <View style={styles.mapWrapper}>   
                       <MapView
                           style={{height:300,width:300}}
                           showsUserLocation={true}
@@ -318,7 +318,13 @@ class trackingScreen extends Component {
                         <Text style={{width:0,height:0}}>
                           {this.state.lastPosition[0]}, {this.state.lastPosition[1]}
                         </Text>
-                     </View>                              
+                     </View>
+                     )}
+                     {renderIf(this.state.lastPosition=='undefined',
+                     <View style={{paddingTop:40,paddingBottom:40,margin:10}}>
+                        <Text style={{color:'#ea2e49',fontSize:24,textAlign:'center'}}>Please, switch on geolocation on your device for tracking your route</Text>
+                     </View>   
+                     )}                           
                     <View style={{flex:1,flexDirection:'column',alignItems:'center'}}>
                       <Text style={styles.header}>{this.props.route.name}</Text>
                       <TouchableHighlight onPress={()=>this.setState({eventModal:true})} style={mainStyles.menuButton}>
@@ -371,12 +377,19 @@ const styles = StyleSheet.create({
     marginTop:0,
     marginBottom:10
   },
+  mapWrapper:{
+    margin:20,
+    borderWidth:2,
+    borderColor:'#ea2e49'
+  },
   eventForm:{
-    zIndex:3,
-    width:300,
+    zIndex:4,
+    width:310,
     marginTop:20,
     backgroundColor:'#eaeaea',
     padding:20,
+    borderColor:'#5e6973',
+    borderWidth:1
   },
   contentWrapper:{
     flex:1,
@@ -412,6 +425,13 @@ const styles = StyleSheet.create({
     color:'white',
     height:45,
     marginRight:15
+  },
+  Overlay:{
+    backgroundColor:'black',
+    position:'absolute',
+    top:0,left:0,right:0,bottom:0,
+    opacity:0.75,
+    zIndex:3
   }
 });
 export default trackingScreen;
