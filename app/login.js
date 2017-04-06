@@ -12,9 +12,12 @@ import {
 } 
 from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import GoogleSignIn from 'react-native-google-sign-in';
 import renderIf from './renderif';
 import Icon from './icon'; 
 import  mainStyles from './styles';
+import  socialRegister from './socialReg';
+
 class loginScreen extends Component {
    constructor(props) {
     super(props);
@@ -23,7 +26,7 @@ class loginScreen extends Component {
         password:''
     };
   }
-  goLogin() {
+  goLogin(social) {
     return fetch('http://teethemes.com:3000/api/authentication',{
     method: 'POST',
     headers: {
@@ -31,8 +34,8 @@ class loginScreen extends Component {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      email: this.state.login,
-      password: this.state.password,
+      email: social?social.email:this.state.login,
+      password: social?'':this.state.password,
     })
     }).then((response) => response.json())
         .then((responseJson) => {
@@ -53,7 +56,15 @@ class loginScreen extends Component {
             this.setState({errorMessage:false});
             
           } else {
-            this.setState({errorMessage:'Wrong username or password'});
+            if (responseJson.status==404&&social) {
+              socialRegister.register(social).then(function(response) {
+                let user=response;
+                AsyncStorage.setItem('user',user);
+                Actions.main({user:user});
+              });
+            } else {
+              this.setState({errorMessage:responseJson.message});
+            }
           }
         })
         .catch((error) => {
@@ -75,6 +86,17 @@ class loginScreen extends Component {
                   return Promise.reject(error);
                 });
         }
+  }
+  async googleAuth() {
+        await GoogleSignIn.configure({
+            clientID: 'AIzaSyAJ2VIqe2QctDEM7DWfmpfBVvjdbN3vKI8',
+            scopes: ['openid', 'email', 'profile'],
+            shouldFetchBasicProfile: true,
+        });
+          const googleUser = await GoogleSignIn.signInPromise();
+          setTimeout(() => {
+            this.goLogin(googleUser);
+          }, 1500);
   }
   render() {
     return (
@@ -112,7 +134,7 @@ class loginScreen extends Component {
                             <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Facebook login</Text>
                             </View>
                         </TouchableHighlight>  
-                        <TouchableHighlight onPress={()=>this.goLogin()} style={styles.googleButton}>
+                        <TouchableHighlight onPress={()=>this.googleAuth()} style={styles.googleButton}>
                            <View>
                             <Icon name="Google" width="20" height="20" fill="#fff"/>
                             <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Google login</Text>
