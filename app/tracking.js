@@ -322,7 +322,8 @@ class trackingScreen extends Component {
                      )}
                      {renderIf(this.state.lastPosition=='undefined',
                      <View style={{paddingTop:40,paddingBottom:40,margin:10}}>
-                        <Text style={{color:'#ea2e49',fontSize:24,textAlign:'center'}}>Please, switch on geolocation on your device for tracking your route</Text>
+                        <Image style={{width:50,height:50}} source={require('../img/loader.gif')}/>
+                        <Text style={{color:'#ea2e49',fontSize:16,textAlign:'center'}}>Map is loading. It could take some time. Geolocation must be turned on for your device</Text>
                      </View>   
                      )}                           
                     <View style={{flex:1,flexDirection:'column',alignItems:'center'}}>
