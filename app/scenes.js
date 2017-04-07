@@ -5,6 +5,7 @@ import loginScreen from './login';
 import mainScreen from './main';
 import registerScreen from './register';
 import trackingScreen from './tracking';
+import routeScreen from './route';
 import routeCreationScreen from './routeCreation';
 
 const scenes = Actions.create(
@@ -42,7 +43,13 @@ const scenes = Actions.create(
             component={routeCreationScreen}
             title="creation"
           />
-        </Scene>
+         <Scene
+            key="route"
+            hideNavBar={true}
+            component={routeScreen}
+            title="route"
+          />
+      </Scene>
 );
 
 export default scenes;

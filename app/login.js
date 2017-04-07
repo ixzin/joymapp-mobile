@@ -46,6 +46,7 @@ class loginScreen extends Component {
               AsyncStorage.setItem('token',token);
               let user;
               getUserInfo(userId,token).then(function(response) {
+                Keyboard.dismiss();
                 AsyncStorage.setItem('user',JSON.stringify(response.user));
                 Actions.main({user:response.user});
               });

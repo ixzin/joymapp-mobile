@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -16,6 +17,7 @@ class mainScreen extends Component {
     super(props);
     this.state = {
       changeRoute:false,
+      loader:false,
       routes:[]
      }
    }  
@@ -24,13 +26,34 @@ class mainScreen extends Component {
       Actions.login({user:''});
     }
     async getRoutes(id) {
-      this.setState({changeRoute:true});
+      this.setState({changeRoute:true,loader:true});
       let token=await AsyncStorage.getItem('token');
       let routes=await this.getRoutesByUser(id,token);
-      this.setState({routes:routes});
+      this.setState({loader:false,routes:routes});
+    }
+    async goRoute(id) {
+      let token=await AsyncStorage.getItem('token');
+      let routeInfo=await this.getRoute(id,token);
+      Actions.route({route:routeInfo.route});
     }
     getRoutesByUser(id,token) {
         return fetch('http://teethemes.com:3000/api/routesByUser/'+id,{
+          method: 'GET',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'x-access-token':token
+        }
+        }).then((response) => response.json())
+            .then((responseJSON) => {
+                return Promise.resolve(responseJSON);  
+            })
+            .catch((error) => {
+              return Promise.reject(error);
+            });
+    }
+    getRoute(id,token) {
+      return fetch('http://teethemes.com:3000/api/routes/'+id,{
           method: 'GET',
           headers: {
               'Accept': 'application/json',
@@ -62,21 +85,28 @@ class mainScreen extends Component {
               <Text style={{color:'white',textAlign:'center'}}>Start tracking</Text>
           </TouchableHighlight>
           )}
-          {renderIf(this.state.routes.length==0&&this.state.changeRoute, 
+          {renderIf(this.state.loader, 
                 <Image style={{width:50,height:50}} source={require('../img/loader.gif')}/>
           )}
           {renderIf(this.state.changeRoute,              
             <View>
+              {renderIf(!this.state.loader&&this.state.routes.length!=0,
               <Text style={styles.header}>Choose route</Text>
+              )}
                 {this.state.routes.map(function(route, i){
                   return(
-                    <View style={styles.routeContainer} key={i}>
-                      <Image  style={styles.routeIcon} source={{uri: 'http://teethemes.com:3000/data/routes/'+route._id+'/thumb.jpg'}}/>
-                      <Text style={styles.routeNameCell}>{route.name}</Text>
-                      <Text style={styles.routeStatusCell}>{route.status}</Text>
-                    </View>
+                    <TouchableWithoutFeedback  key={i} onPress={()=>this.goRoute(route._id)}>
+                      <View style={styles.routeContainer}>
+                        <Image  style={styles.routeIcon} source={{uri: 'http://teethemes.com:3000/data/routes/'+route._id+'/thumb.jpg'}}/>
+                        <Text style={styles.routeNameCell}>{route.name}</Text>
+                        <Text style={styles.routeStatusCell}>{route.status}</Text>
+                      </View>
+                    </TouchableWithoutFeedback>
                   );
-                })}
+                },this)}
+                {renderIf(!this.state.loader&&this.state.routes.length==0,
+                      <Text style={{marginBottom:15,color:'black',textAlign:'center'}}>You dont have enough routes</Text>
+                  )}
                 <View style={styles.contentWrapper}>
                 <TouchableHighlight onPress={Actions.creation}  style={mainStyles.menuButton}>
                   <Text style={{color:'white',textAlign:'center'}}>Create new route</Text>
