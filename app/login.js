@@ -16,7 +16,6 @@ import GoogleSignIn from 'react-native-google-sign-in';
 import renderIf from './renderif';
 import Icon from './icon'; 
 import  mainStyles from './styles';
-import  socialRegister from './socialReg';
 
 class loginScreen extends Component {
    constructor(props) {
@@ -57,7 +56,7 @@ class loginScreen extends Component {
             
           } else {
             if (responseJson.status==404&&social) {
-              socialRegister.register(social).then(function(response) {
+              this.socialRegister(social).then(function(response) {
                 let user=response;
                 AsyncStorage.setItem('user',user);
                 Actions.main({user:user});
@@ -93,10 +92,100 @@ class loginScreen extends Component {
             scopes: ['openid', 'email', 'profile'],
             shouldFetchBasicProfile: true,
         });
-          const googleUser = await GoogleSignIn.signInPromise();
-          setTimeout(() => {
-            this.goLogin(googleUser);
-          }, 1500);
+          let user = await GoogleSignIn.signInPromise();
+          let googleUser={
+              email:user.email,
+              password:'',
+              firstname:user.givenName,
+              lastname:user.familyName
+          }
+          this.goLogin(googleUser);
+  }
+  async facebookAuth() {
+    const FBSDK = require('react-native-fbsdk');
+    const {
+      LoginManager,
+      GraphRequest,
+      GraphRequestManager
+    } = FBSDK;
+
+    // ...
+    _responseInfoCallback = (error, result) => {
+      if (error) {
+        alert('Error fetching data: ' + error.toString());
+      } else {
+        console.log(result);
+      }
+    }
+    // Attempt a login using the Facebook login dialog asking for default permissions.
+    LoginManager.logInWithReadPermissions(['public_profile']).then(
+      function(result) {
+        if (result.isCancelled) {
+          console.log('Login cancelled');
+        } else {
+            const infoRequest = new GraphRequest(
+              '/me',
+               {
+                httpMethod: 'GET',
+                version: 'v2.7',
+                parameters: {
+                    'fields': {
+                        'string' : 'email,name,friends'
+                    }
+                }
+              },
+              this._responseInfoCallback,
+            );
+            // Start the graph request.
+            new GraphRequestManager().addRequest(infoRequest).start();
+          }
+      },
+      function(error) {
+        console.log('Login fail with error: ' + error);
+      }
+    );
+    _responseInfoCallback = (error, result) => {
+        if (error) {
+          alert('Error fetching data: ' + error.toString());
+        } else {
+          let facebookUser={
+            email:result.email,
+            firstname:result.name.split(' ')[0],
+            lastname:result.name.split(' ')[1],
+            password:''
+          }
+          this.goLogin(facebookUser);
+        }
+  }
+}
+  socialRegister(user) {
+    return fetch('http://teethemes.com:3000/api/users',{
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            registerData:{
+              email:user.email,
+              password:'',
+              firstname:user.firstname,
+              lastname:user.lastname
+            }
+          })
+          }).then((response) => response.json())
+              .then((responseJson) => {
+                if (responseJson.user) {
+                   try {
+                      return Promise.resolve(responseJson.user); 
+                    } catch (error) {
+                       return Promise.reject(error);
+                    }
+                }
+              })
+              .catch((error) => {
+                console.error(error);
+              });
   }
   render() {
     return (
@@ -127,8 +216,8 @@ class loginScreen extends Component {
                          <TouchableHighlight onPress={()=>this.goLogin()} style={mainStyles.Button}>
                             <Text style={{color:'white',textAlign:'center'}}>Sign in</Text>
                         </TouchableHighlight>  
-                        <Text style={{color:'white',marginTop:10,marginBottom:10}}>OR</Text>
-                        <TouchableHighlight onPress={()=>this.goLogin()} style={styles.facebookButton}>
+                        <Text style={{color:'white',marginTop:10,marginBottom:10}}>or</Text>
+                        <TouchableHighlight onPress={()=>this.facebookAuth()} style={styles.facebookButton}>
                            <View>
                             <Icon name="Facebook" width="20" height="20" fill="#fff"/>
                             <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Facebook login</Text>

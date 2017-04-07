@@ -2,6 +2,7 @@ package com.tripsmobile;
 
 import com.facebook.react.ReactActivity;
 import com.horcrux.svg.SvgPackage;
+import android.content.Intent;
 
 public class MainActivity extends ReactActivity {
 
@@ -12,5 +13,11 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "tripsMobile";
+    }
+
+     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
     }
 }

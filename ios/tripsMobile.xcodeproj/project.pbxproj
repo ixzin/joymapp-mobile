@@ -26,6 +26,7 @@
 		C3C11325FF944A1DA9662AC2 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A261193610A041BF88C262F8 /* libRNSVG.a */; };
 		E5B1BDF629F34C81976650CF /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F16FD49358847FDAECD8217 /* libAirMaps.a */; };
 		EEA31EFC2F01448B924E51F3 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FF6E88C87394850B6057A7D /* libRCTCamera.a */; };
+		5800540E62DA45738F0149AD /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 129CABCEB33044A39E117DA1 /* libRCTFBSDK.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -151,6 +152,8 @@
 		7F16FD49358847FDAECD8217 /* libAirMaps.a */ = {isa = PBXFileReference; name = "libAirMaps.a"; path = "libAirMaps.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		6BB23BAE41ED4B44B1A282FE /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; name = "RCTCamera.xcodeproj"; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		9FF6E88C87394850B6057A7D /* libRCTCamera.a */ = {isa = PBXFileReference; name = "libRCTCamera.a"; path = "libRCTCamera.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		1A75348682364968B87FEBB1 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; name = "RCTFBSDK.xcodeproj"; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		129CABCEB33044A39E117DA1 /* libRCTFBSDK.a */ = {isa = PBXFileReference; name = "libRCTFBSDK.a"; path = "libRCTFBSDK.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +183,7 @@
 				C3C11325FF944A1DA9662AC2 /* libRNSVG.a in Frameworks */,
 				E5B1BDF629F34C81976650CF /* libAirMaps.a in Frameworks */,
 				EEA31EFC2F01448B924E51F3 /* libRCTCamera.a in Frameworks */,
+				5800540E62DA45738F0149AD /* libRCTFBSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +319,7 @@
 				E3C21F0607A640CC87D100F7 /* RNSVG.xcodeproj */,
 				0F7024DE8E8B40A6B335213D /* AirMaps.xcodeproj */,
 				6BB23BAE41ED4B44B1A282FE /* RCTCamera.xcodeproj */,
+				1A75348682364968B87FEBB1 /* RCTFBSDK.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -649,6 +654,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -665,6 +671,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tripsMobile.app/tripsMobile";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -748,6 +755,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-maps\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
+					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -791,6 +799,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-maps\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
+					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
