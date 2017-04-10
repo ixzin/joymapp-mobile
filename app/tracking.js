@@ -24,8 +24,8 @@ class trackingScreen extends Component {
     this.mapRef = null;
     this.state = {
       lastPosition:'undefined',
-      route: [],
-      points:[],
+      route: this.props.route.path?this.convertPoints(this.props.route.path):[],
+      points:this.props.route.path?this.props.route.path:[],
       events:[],
       timer:0,
       active:true,
@@ -39,6 +39,19 @@ class trackingScreen extends Component {
       media:[]
      }
    }        
+
+   /*convertPoints*/
+   convertPoints(path) {
+    let coordinates=[];
+    for (let i=0;i<path.length;i++) {
+      coordinates=coordinates.concat([{
+        latitude:path[i][0],
+        longitude:path[i][1]
+      }]);
+    } 
+    return coordinates;
+   }
+
      takePicture=()=> {
       const options = {};
       //options.location = ...
@@ -130,8 +143,8 @@ class trackingScreen extends Component {
     }
      watchID = (null: ?number);
          componentDidMount = () => {
-          let route=[];
-          let points=[];
+          let route=this.state.route;
+          let points=this.state.points;
             this.watchID = navigator.geolocation.watchPosition((position) => {
               if (this.state.active) {
                  let lastPosition =[position.coords.latitude,position.coords.longitude];                           
@@ -139,6 +152,7 @@ class trackingScreen extends Component {
                  let positionCoordinate=[{latitude:this.state.lastPosition[0],longitude:this.state.lastPosition[1]}];  
                  route=route.concat(positionCoordinate);
                  points.push(lastPosition);
+                 console.log(points);
                  this.setState({route}); 
                  this.setState({points});  
                  if (route.length>2) {
