@@ -7,6 +7,7 @@ import registerScreen from './register';
 import trackingScreen from './tracking';
 import routeScreen from './route';
 import routeCreationScreen from './routeCreation';
+import profileScreen from './profile';
 
 const scenes = Actions.create(
 <Scene key="root">
@@ -48,6 +49,12 @@ const scenes = Actions.create(
             hideNavBar={true}
             component={routeScreen}
             title="route"
+          />
+           <Scene
+            key="profile"
+            hideNavBar={true}
+            component={profileScreen}
+            title="profile"
           />
       </Scene>
 );

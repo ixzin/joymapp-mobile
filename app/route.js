@@ -35,7 +35,7 @@ class routeScreen extends Component {
             <Text style={styles.header}>{this.props.route.name}</Text>
             <Text style={styles.text}>{this.props.route.description}</Text>
             <TouchableHighlight onPress={()=>this.goToRoute()} style={mainStyles.Button}>
-                      <Text style={{color:'white',textAlign:'center'}}>Go!</Text>
+                <Text style={{color:'white',textAlign:'center'}}>Go!</Text>
             </TouchableHighlight> 
           </View>
         </View>

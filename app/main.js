@@ -119,7 +119,7 @@ class mainScreen extends Component {
           )}
           {renderIf(!this.state.changeRoute,
           <View>
-            <TouchableHighlight style={mainStyles.menuButton}>
+            <TouchableHighlight onPress={()=>Actions.profile({user:this.props.user})}  style={mainStyles.menuButton}>
                 <Text style={{color:'white',textAlign:'center'}}>Edit profile</Text>        
             </TouchableHighlight>      
 
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   header:{
     textAlign:'center',
     fontSize:18,
-    marginBottom:10,
+    marginBottom:20,
     color:'black'
   },
   contentWrapper:{
