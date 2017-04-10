@@ -312,7 +312,7 @@ class trackingScreen extends Component {
                       </View>
                      </ScrollView> 
                   </Modal>
-                  {renderIf(this.state.lastPosition!='undefined',
+                  {renderIf(this.state.route.length!=0&&this.state.lastPosition!='undefined',
                     <View style={styles.mapWrapper}>   
                       <MapView
                           style={{height:300,width:300}}
@@ -334,7 +334,7 @@ class trackingScreen extends Component {
                         </Text>
                      </View>
                      )}
-                     {renderIf(this.state.lastPosition=='undefined',
+                     {renderIf(this.state.route.length==0&&this.state.lastPosition=='undefined',
                      <View style={{paddingTop:40,paddingBottom:40,margin:10}}>
                         <Image style={{width:50,height:50}} source={require('../img/loader.gif')}/>
                         <Text style={{color:'#ea2e49',fontSize:16,textAlign:'center'}}>Map is loading. It could take some time. Geolocation must be turned on for your device</Text>
