@@ -49,6 +49,7 @@ class loginScreen extends Component {
               getUserInfo(userId,token).then(function(response) {
                 Keyboard.dismiss();
                 AsyncStorage.setItem('user',JSON.stringify(response.user));
+                 AsyncStorage.setItem('social',social?'true':null);
                 Actions.main({user:response.user});
               });
             } catch (error) {
