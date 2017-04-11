@@ -16,6 +16,8 @@ import { Actions } from 'react-native-router-flux';
 import renderIf from './renderif';
 import Icon from './icon'; 
 import  mainStyles from './styles';
+import Parametres from './params';
+
 class routeScreen extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +33,7 @@ class routeScreen extends Component {
         <View style={mainStyles.container}>
           <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
           <View style={styles.contentWrapper}>
-            <Image style={{width:150,height:150,borderRadius:75}} source={{uri: 'http://teethemes.com:3000/data/routes/'+this.props.route._id+'/'+this.props.route.thumb}}/>
+            <Image style={{width:150,height:150,borderRadius:75}} source={{uri: Parametres.url+'data/routes/'+this.props.route._id+'/'+this.props.route.thumb}}/>
             <Text style={styles.header}>{this.props.route.name}</Text>
             <Text style={styles.text}>{this.props.route.description}</Text>
             <TouchableHighlight onPress={()=>this.goToRoute()} style={mainStyles.Button}>

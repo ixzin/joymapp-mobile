@@ -18,6 +18,8 @@ import mapStyles from './mapStyles';
 import Camera from 'react-native-camera';
 import renderIf from './renderif';
 import Icon from './icon'; 
+import Parametres from './params';
+
 class trackingScreen extends Component {
   constructor(props) {
     super(props);
@@ -115,7 +117,7 @@ class trackingScreen extends Component {
           this.setState({events});
           console.log(event);
           let token=await AsyncStorage.getItem('token');
-            return fetch('http://teethemes.com:3000/api/routes/'+this.props.route._id,{
+            return fetch(Parametres.apiUrl+'routes/'+this.props.route._id,{
               method: 'PUT',
               headers: {
                   'Accept': 'application/json',
@@ -168,7 +170,7 @@ class trackingScreen extends Component {
          }
          async saveRoute() {
           let token=await AsyncStorage.getItem('token');
-            return fetch('http://teethemes.com:3000/api/routes/'+this.props.route._id,{
+            return fetch(Parametres.apiUrl+'routes/'+this.props.route._id,{
               method: 'PUT',
               headers: {
                   'Accept': 'application/json',

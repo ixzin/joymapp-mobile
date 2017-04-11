@@ -14,6 +14,7 @@ import { Actions } from 'react-native-router-flux';
 import DatePicker from 'react-native-datepicker';
 import renderIf from './renderif';
 import  mainStyles from './styles';
+import Parametres from './params';
 
 class registerScreen extends Component {
   constructor(props) {
@@ -45,7 +46,7 @@ class registerScreen extends Component {
           birthmonth:this.state.birthday?(+this.state.birthday.split('-')[1]-1):'',
           birthyear:this.state.birthday?this.state.birthday.split('-')[0]:''
       }
-       return fetch('http://teethemes.com:3000/api/users',{
+       return fetch(Parametres.apiUrl+'users',{
           method: 'POST',
           headers: {
             'Accept': 'application/json',

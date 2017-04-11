@@ -12,6 +12,8 @@ import {
 import { Actions } from 'react-native-router-flux';
 import renderIf from './renderif';
 import  mainStyles from './styles';
+import Parametres from './params';
+
 class mainScreen extends Component {
     constructor(props) {
     super(props);
@@ -37,7 +39,7 @@ class mainScreen extends Component {
       Actions.route({route:routeInfo.route});
     }
     getRoutesByUser(id,token) {
-        return fetch('http://teethemes.com:3000/api/routesByUser/'+id,{
+        return fetch(Parametres.apiUrl+'routesByUser/'+id,{
           method: 'GET',
           headers: {
               'Accept': 'application/json',
@@ -53,7 +55,7 @@ class mainScreen extends Component {
             });
     }
     getRoute(id,token) {
-      return fetch('http://teethemes.com:3000/api/routes/'+id,{
+      return fetch(Parametres.apiUrl+'routes/'+id,{
           method: 'GET',
           headers: {
               'Accept': 'application/json',
@@ -75,7 +77,7 @@ class mainScreen extends Component {
         <ScrollView>
           <View style={styles.contentWrapper}>
             <View style={{paddingTop:60}}>
-              <Image style={{width:150,height:150,borderRadius:75}} source={{uri: 'http://teethemes.com:3000/'+this.props.user.image}}/>
+              <Image style={{width:150,height:150,borderRadius:75}} source={{uri: Parametres.url+this.props.user.image}}/>
             </View>
             <Text style={styles.header}>{this.props.user.firstname.toUpperCase()}&nbsp;{this.props.user.lastname.toUpperCase()} </Text>
           </View>
@@ -97,7 +99,7 @@ class mainScreen extends Component {
                   return(
                     <TouchableWithoutFeedback  key={i} onPress={()=>this.goRoute(route._id)}>
                       <View style={styles.routeContainer}>
-                        <Image  style={styles.routeIcon} source={{uri: 'http://teethemes.com:3000/data/routes/'+route._id+'/thumb.jpg'}}/>
+                        <Image  style={styles.routeIcon} source={{uri: Parametres.url+'data/routes/'+route._id+'/thumb.jpg'}}/>
                         <Text style={styles.routeNameCell}>{route.name}</Text>
                         <Text style={styles.routeStatusCell}>{route.status}</Text>
                       </View>

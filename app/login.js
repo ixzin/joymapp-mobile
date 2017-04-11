@@ -15,7 +15,8 @@ import { Actions } from 'react-native-router-flux';
 import GoogleSignIn from 'react-native-google-sign-in';
 import renderIf from './renderif';
 import Icon from './icon'; 
-import  mainStyles from './styles';
+import mainStyles from './styles';
+import Parametres from './params';
 
 class loginScreen extends Component {
    constructor(props) {
@@ -26,7 +27,7 @@ class loginScreen extends Component {
     };
   }
   goLogin(social) {
-    return fetch('http://teethemes.com:3000/api/authentication',{
+    return fetch(Parametres.apiUrl+'authentication',{
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -71,7 +72,7 @@ class loginScreen extends Component {
           console.error(error);
         });
         function getUserInfo(id,token) {
-          return fetch('http://teethemes.com:3000/api/users/'+id,{
+          return fetch(Parametres.apiUrl+'users/'+id,{
             method: 'GET',
             headers: {
               'Accept': 'application/json',
@@ -160,7 +161,7 @@ class loginScreen extends Component {
   }
 }
   socialRegister(user) {
-    return fetch('http://teethemes.com:3000/api/users',{
+    return fetch(Parametres.apiUrl+'api/users',{
           method: 'POST',
           headers: {
             'Accept': 'application/json',

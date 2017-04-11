@@ -17,6 +17,8 @@ import DatePicker from 'react-native-datepicker';
 import renderIf from './renderif';
 import Icon from './icon'; 
 import  mainStyles from './styles';
+import Parametres from './params';
+
 class routeCreationScreen extends Component {
   constructor(props) {
     super(props);
@@ -53,7 +55,7 @@ class routeCreationScreen extends Component {
       return true;
    }
     createNewRoute(id,token) {
-       return fetch('http://teethemes.com:3000/api/routes/',{
+       return fetch(Parametres.apiUrl+'routes/',{
           method: 'POST',
           headers: {
               'Accept': 'application/json',
