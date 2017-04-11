@@ -317,7 +317,7 @@ class trackingScreen extends Component {
                   {renderIf(this.state.route.length!=0&&this.state.lastPosition!='undefined',
                     <View style={styles.mapWrapper}>   
                       <MapView
-                          style={{height:300,width:300}}
+                          style={{height:Parametres.resolution.height*0.5,width:Parametres.resolution.width*0.85}}
                           showsUserLocation={true}
                           initialRegion={{
                             latitude: this.state.lastPosition[0],
