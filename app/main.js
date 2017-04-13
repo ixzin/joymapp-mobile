@@ -77,7 +77,7 @@ class mainScreen extends Component {
         <ScrollView>
           <View style={styles.contentWrapper}>
             <View style={{paddingTop:Parametres.resolution.height*0.1}}>
-              <Image style={{width:150,height:150,borderRadius:75}} source={{uri: Parametres.url+this.props.user.image}}/>
+              <Image style={{width:150,height:150,borderRadius:75}} source={{uri: this.props.user.image?(Parametres.url+this.props.user.image):(Parametres.url+'img/avatar.png')}}/>
             </View>
             <Text style={styles.header}>{this.props.user.firstname.toUpperCase()}&nbsp;{this.props.user.lastname.toUpperCase()} </Text>
           </View>
