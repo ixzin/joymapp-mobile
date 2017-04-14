@@ -78,7 +78,7 @@ class routeScreen extends Component {
           <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
           <ScrollView>
             <TouchableWithoutFeedback onPress={()=>this.setState({editMode:!this.state.editMode})}>
-                <View  style={{position:'absolute',top:20,right:0}}>
+                <View  style={{position:'absolute',top:20,right:20}}>
                     <Icon name="Edit" width="20" height="20" fill={this.state.editMode?'#ea2e49':'black'}/>
                 </View>  
               </TouchableWithoutFeedback>
