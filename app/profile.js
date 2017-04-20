@@ -8,6 +8,7 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
   TextInput,
+  ScrollView,
   View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -15,6 +16,7 @@ import renderIf from './renderif';
 import DatePicker from 'react-native-datepicker';
 import  mainStyles from './styles';
 import Parametres from './params';
+import Icon from './icon'; 
 
 class profileScreen extends Component {
 	   constructor(props) {
@@ -107,114 +109,121 @@ class profileScreen extends Component {
                 )}
           		<Image style={mainStyles.background} source={require('../img/pattern.png')}/>
           		<TouchableWithoutFeedback onPress={ () => { Keyboard.dismiss() } }>
-	          		<View style={styles.contentWrapper}>
-	          			<Text style={styles.header}>Edit user profile</Text>
-	          			<View style={styles.row}>
-	          				<Text style={styles.label}>Firstname:&nbsp;</Text>
-	          				<TextInput
-	          				  style={this.state.errorFirstname?styles.error:styles.input}
-	          				  value={this.state.firstname}
-	                          onChangeText={(firstname) => this.setState({firstname,changesDetect:true})}
-	                          onBlur={() => {this.setState({errorFirstname: !this.validate(this.state.firstname,3)})}}
-	                        />
-	          			</View>
-	          			<View style={styles.row}>
-	          				<Text style={styles.label}>Lastname:&nbsp;</Text>
-	          				<TextInput
-	          				  style={this.state.errorLastname?styles.error:styles.input}
-	          				  value={this.state.lastname}
-	                          onChangeText={(lastname) => this.setState({lastname,changesDetect:true})}
-	                          onBlur={() => {this.setState({errorLastname: !this.validate(this.state.lastname,3)})}}
-	                          />
-	          			</View>	
-	          			<View style={styles.row}>
-	          				<Text style={styles.label}>Email:&nbsp;</Text>
-	          				<TextInput
-	          				  style={this.state.erroEmail?styles.error:styles.input}
-	          				  editable={!this.state.social}
-	          				  value={this.state.email}
-	                          onChangeText={(email) => this.setState({email,changesDetect:true})}
-	                          onBlur={() => {this.setState({erroEmail: !this.validate(this.state.email,6)})}}
-	                          />
-	          			</View>
-	          			<View style={styles.row}>
-	          				<Text style={styles.label}>Login:&nbsp;</Text>
-	          				<TextInput
-	          				  style={styles.input}
-	          				  value={this.state.login}
-	                          onChangeText={(login) => this.setState({login,changesDetect:true})}/>
-	          			</View>
-	          			<View style={styles.row}>
-	          				<Text style={styles.label}>Pasword:&nbsp;</Text>
-	          				<TextInput
-	          				  placeholder="******"
-	                          placeholderTextColor="#5e6973"
-	                          secureTextEntry={true} 
-	                          editable={!this.state.social}
-	          				  style={this.state.erroPass?styles.error:styles.input}
-	          				  value={this.state.password}
-	                          onChangeText={(password) => this.setState({password,changesDetect:true})}
-	                          />
-	          			</View>
-	          			<View style={styles.row}>
-	          				<Text style={styles.label}>Confirm</Text>
-	          				<TextInput
-	          				  placeholder="******"
-	                          placeholderTextColor="#5e6973"
-	                          editable={!this.state.social}
-	                          secureTextEntry={true} 
-	          				  style={this.state.erroPass?styles.error:styles.input}
-	          				  value={this.state.confirmPassword}
-	                          onChangeText={(confirmPassword) => this.setState({confirmPassword})}
-	                          onBlur={() => {this.setState({erroPass: !this.validate(this.state.password,4)})}}
-	                          />
-	          			</View>
-	          			<View style={styles.row}>
-	          				<Text style={styles.label}>Birthday:&nbsp;</Text>
-	          				 <DatePicker
-		                        style={{width: 150,zIndex:4, marginTop:-10}}
-		                        date={this.state.birthday}
-		                        mode="date"
-		                        format="YYYY-MM-DD"
-		                        minDate="1950-01-01"
-		                        maxDate="2000-01-01"
-		                        confirmBtnText="Confirm"
-		                        cancelBtnText="Cancel"
-		                        showIcon={false}
-		                        customStyles={{
-		                          dateInput: {
-		                            borderBottomColor :'#5e6973',
-		                            borderBottomWidth:0.5,
-		                            borderRightWidth:0,
-		                            borderTopWidth:0,
-		                            borderLeftWidth:0,
-		                          },
-		                          dateText:{
-		                            color:'#5e6973',
-		                            textAlign:'left'
-		                          }
-		                        }}
-		                        onDateChange={(birthday) => {this.setState({birthday: birthday,changesDetect:true})}}
-		                      />
-	          			</View>
-	          			<View style={styles.row}>
-	          				<Text style={styles.label}>Country:&nbsp;</Text>
-	          				<TextInput
-	          				  style={styles.input}
-	          				  value={this.state.country}
-	                          onChangeText={(country) => this.setState({country})}/>
-	          			</View>
-	          			<View style={{flex:1,flexDirection:'column',alignSelf:'center'}}>
-		          			<TouchableHighlight onPress={()=>Actions.main({user:this.props.user})} style={mainStyles.menuButton}>
-			                  <Text style={{color:'white',textAlign:'center'}}>Return</Text>
-			                </TouchableHighlight>
-			                {renderIf(this.state.changesDetect,
-			                <TouchableHighlight onPress={()=>this.updateUser()} style={mainStyles.menuButton}>
-			                  <Text style={{color:'white',textAlign:'center'}}>Save</Text>
-			                </TouchableHighlight>
-			                )}
-		                </View>		            
-          		</View>
+          			<ScrollView>
+		          		<View style={styles.contentWrapper}>
+		          			<Text style={styles.header}>Edit user profile</Text>
+		          			<View style={{flex:1,flexDirection:'row'}}>
+		          				<Text style={styles.label}>Avatar:&nbsp;</Text>
+		          				<Image style={{width:100,height:100}} source={{uri: this.props.user.image?(Parametres.url+this.props.user.image):(Parametres.url+'img/avatar.png')}}/>
+		          				<Icon name="Edit" width="20" height="20" fill='black'/>
+		          			</View>
+		          			<View style={styles.row}>
+		          				<Text style={styles.label}>Firstname:&nbsp;</Text>
+		          				<TextInput
+		          				  style={this.state.errorFirstname?styles.error:styles.input}
+		          				  value={this.state.firstname}
+		                          onChangeText={(firstname) => this.setState({firstname,changesDetect:true})}
+		                          onBlur={() => {this.setState({errorFirstname: !this.validate(this.state.firstname,3)})}}
+		                        />
+		          			</View>
+		          			<View style={styles.row}>
+		          				<Text style={styles.label}>Lastname:&nbsp;</Text>
+		          				<TextInput
+		          				  style={this.state.errorLastname?styles.error:styles.input}
+		          				  value={this.state.lastname}
+		                          onChangeText={(lastname) => this.setState({lastname,changesDetect:true})}
+		                          onBlur={() => {this.setState({errorLastname: !this.validate(this.state.lastname,3)})}}
+		                          />
+		          			</View>	
+		          			<View style={styles.row}>
+		          				<Text style={styles.label}>Email:&nbsp;</Text>
+		          				<TextInput
+		          				  style={this.state.erroEmail?styles.error:styles.input}
+		          				  editable={!this.state.social}
+		          				  value={this.state.email}
+		                          onChangeText={(email) => this.setState({email,changesDetect:true})}
+		                          onBlur={() => {this.setState({erroEmail: !this.validate(this.state.email,6)})}}
+		                          />
+		          			</View>
+		          			<View style={styles.row}>
+		          				<Text style={styles.label}>Login:&nbsp;</Text>
+		          				<TextInput
+		          				  style={styles.input}
+		          				  value={this.state.login}
+		                          onChangeText={(login) => this.setState({login,changesDetect:true})}/>
+		          			</View>
+		          			<View style={styles.row}>
+		          				<Text style={styles.label}>Pasword:&nbsp;</Text>
+		          				<TextInput
+		          				  placeholder="******"
+		                          placeholderTextColor="#5e6973"
+		                          secureTextEntry={true} 
+		                          editable={!this.state.social}
+		          				  style={this.state.erroPass?styles.error:styles.input}
+		          				  value={this.state.password}
+		                          onChangeText={(password) => this.setState({password,changesDetect:true})}
+		                          />
+		          			</View>
+		          			<View style={styles.row}>
+		          				<Text style={styles.label}>Confirm</Text>
+		          				<TextInput
+		          				  placeholder="******"
+		                          placeholderTextColor="#5e6973"
+		                          editable={!this.state.social}
+		                          secureTextEntry={true} 
+		          				  style={this.state.erroPass?styles.error:styles.input}
+		          				  value={this.state.confirmPassword}
+		                          onChangeText={(confirmPassword) => this.setState({confirmPassword})}
+		                          onBlur={() => {this.setState({erroPass: !this.validate(this.state.password,4)})}}
+		                          />
+		          			</View>
+		          			<View style={styles.row}>
+		          				<Text style={styles.label}>Birthday:&nbsp;</Text>
+		          				 <DatePicker
+			                        style={{width: 150,zIndex:4, marginTop:-10}}
+			                        date={this.state.birthday}
+			                        mode="date"
+			                        format="YYYY-MM-DD"
+			                        minDate="1950-01-01"
+			                        maxDate="2000-01-01"
+			                        confirmBtnText="Confirm"
+			                        cancelBtnText="Cancel"
+			                        showIcon={false}
+			                        customStyles={{
+			                          dateInput: {
+			                            borderBottomColor :'#5e6973',
+			                            borderBottomWidth:0.5,
+			                            borderRightWidth:0,
+			                            borderTopWidth:0,
+			                            borderLeftWidth:0,
+			                          },
+			                          dateText:{
+			                            color:'#5e6973',
+			                            textAlign:'left'
+			                          }
+			                        }}
+			                        onDateChange={(birthday) => {this.setState({birthday: birthday,changesDetect:true})}}
+			                      />
+		          			</View>
+		          			<View style={styles.row}>
+		          				<Text style={styles.label}>Country:&nbsp;</Text>
+		          				<TextInput
+		          				  style={styles.input}
+		          				  value={this.state.country}
+		                          onChangeText={(country) => this.setState({country})}/>
+		          			</View>
+		          			<View style={{flex:1,flexDirection:'column',alignSelf:'center'}}>
+			          			<TouchableHighlight onPress={()=>Actions.main({user:this.props.user})} style={mainStyles.menuButton}>
+				                  <Text style={{color:'white',textAlign:'center'}}>Return</Text>
+				                </TouchableHighlight>
+				                {renderIf(this.state.changesDetect,
+				                <TouchableHighlight onPress={()=>this.updateUser()} style={mainStyles.menuButton}>
+				                  <Text style={{color:'white',textAlign:'center'}}>Save</Text>
+				                </TouchableHighlight>
+				                )}
+			                </View>		            
+	          		</View>
+	          		</ScrollView>
           		</TouchableWithoutFeedback>    
           	</View>		
 	    	)
