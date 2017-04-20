@@ -28,7 +28,7 @@ class trackingScreen extends Component {
       lastPosition:'undefined',
       route: this.props.route.path?this.convertPoints(this.props.route.path):[],
       points:this.props.route.path?this.props.route.path:[],
-      events:[],
+      events:this.props.route.events,
       timer:0,
       active:true,
       zoom:false,
@@ -109,22 +109,13 @@ class trackingScreen extends Component {
         media.splice(index,1);
         this.setState({media});
       }
-    async saveEvent() {
+      async saveEvent(media) {
           let point=this.state.points[this.state.points.length-1];
           let event={label:this.state.eventName,description:this.state.eventDescription,point:point};
           let events=this.state.events;
           events.push(event);
           this.setState({events});
-          console.log(event);
-          let token=await AsyncStorage.getItem('token');
-            return fetch(Parametres.apiUrl+'routes/'+this.props.route._id,{
-              method: 'PUT',
-              headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'x-access-token':token
-            },
-            body: JSON.stringify({
+          let route={
               type: this.props.route.type,
               name: this.props.route.name,
               owner:this.props.route.owner,
@@ -133,11 +124,60 @@ class trackingScreen extends Component {
               startdate: this.props.route.startdate,
               enddate: this.props.route.startdate,
               events:this.state.events,
-              path:this.state.points
+              path:this.state.points 
+          }
+          let token=await AsyncStorage.getItem('token');
+          let uploadedMedia;
+          if (media.length) {
+             uploadedMedia=await this.uploadMedia(token,media[0]);
+          }
+          console.log(uploadedMedia);
+          this.addEvent(token,route).then(function(response) {
+            console.log(response);
+          });
+      }
+      addEvent(token,route) {
+            return fetch(Parametres.apiUrl+'routes/'+this.props.route._id,{
+              method: 'PUT',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'x-access-token':token
+            },
+            body: JSON.stringify({
+              type: route.type,
+              name: route.name,
+              owner:route.owner,
+              status:'active',
+              description: route.description,
+              startdate: route.startdate,
+              enddate: route.startdate,
+              events:route.events,
+              path:route.path
             })
             }).then((response) => response.json())
                 .then((responseJSON) => {
-                    console.log(responseJSON);  
+                  return Promise.resolve(responseJSON);  
+                })
+                .catch((error) => {
+                  return Promise.reject(error);
+                });
+    }
+
+    async uploadMedia(token,media) {
+      let files= new FormData();
+      files.append('avatar', {uri: media.path, name: media.path.substr(-3)=='jpg'?'media.jpg':'media.mp4', type: media.path.substr(-3)=='jpg'?'image/jpg':'video/mp4'});
+      return fetch(Parametres.apiUrl+'upload',{
+              method: "post",
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type' : 'multipart/form-data',
+                  'x-access-token':token
+            },
+            body:files
+            }).then((response) => response.json())
+                .then((responseJSON) => {
+                  return Promise.resolve(responseJSON);  
                 })
                 .catch((error) => {
                   return Promise.reject(error);
@@ -181,6 +221,7 @@ class trackingScreen extends Component {
               type: this.props.route.type,
               name: this.props.route.name,
               owner:this.props.route.owner,
+              events:this.state.events,
               status:'active',
               description: this.props.route.description,
               startdate: this.props.route.startdate,
@@ -300,7 +341,7 @@ class trackingScreen extends Component {
                                 </View>
                               )}
                               <View style={styles.contentWrapper}>
-                                  <TouchableHighlight onPress={()=>this.saveEvent()} style={mainStyles.menuButton}>
+                                  <TouchableHighlight onPress={()=>this.saveEvent(this.state.media)} style={mainStyles.menuButton}>
                                       <Text style={{color:'white',textAlign:'center'}}>Add event</Text>
                                   </TouchableHighlight>
                                   <TouchableHighlight onPress={()=>this.setState({cameraSwitch:true})} style={mainStyles.menuButton}>
