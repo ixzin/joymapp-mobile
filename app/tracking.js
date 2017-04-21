@@ -28,7 +28,7 @@ class trackingScreen extends Component {
       lastPosition:'undefined',
       route: this.props.route.path?this.convertPoints(this.props.route.path):[],
       points:this.props.route.path?this.props.route.path:[],
-      events:this.props.route.events,
+      events:[],
       timer:0,
       active:true,
       zoom:false,
@@ -59,8 +59,9 @@ class trackingScreen extends Component {
       //options.location = ...
         this.camera.capture({metadata: options})
           .then((data) =>{
-            console.log(data);
-            this.state.media.push(data);
+            let media=data;
+            media.type="photo";
+            this.state.media.push(media);
           })
           .catch(err => console.error(err));
       }
@@ -68,8 +69,10 @@ class trackingScreen extends Component {
       startRecording = () => {
         if (this.camera) {
           this.camera.capture({mode: Camera.constants.CaptureMode.video})
-              .then((data) => {console.log(data);
-                this.state.media.push(data);
+              .then((data) => {
+                let media=data;
+                media.type="video";
+                this.state.media.push(media);
               })
               .catch(err => console.error(err));
          
@@ -110,50 +113,32 @@ class trackingScreen extends Component {
         this.setState({media});
       }
       async saveEvent(media) {
+        let photos,videos;
+         if (media.length) {
+             let uploadedMedia=await this.uploadMedia(token,media);
+             photos=this.getPhotos(uploadedMedia.files);
+             videos=this.getVideos(uploadedMedia.files);
+          }  
           let point=this.state.points[this.state.points.length-1];
-          let event={label:this.state.eventName,description:this.state.eventDescription,point:point};
-          let events=this.state.events;
-          events.push(event);
-          this.setState({events});
-          let route={
-              type: this.props.route.type,
-              name: this.props.route.name,
-              owner:this.props.route.owner,
-              status:'active',
-              description: this.props.route.description,
-              startdate: this.props.route.startdate,
-              enddate: this.props.route.startdate,
-              events:this.state.events,
-              path:this.state.points 
-          }
-          let token=await AsyncStorage.getItem('token');
-          let uploadedMedia;
-          if (media.length) {
-             uploadedMedia=await this.uploadMedia(token,media[0]);
-          }
-          console.log(uploadedMedia);
-          this.addEvent(token,route).then(function(response) {
-            console.log(response);
-          });
+          let event={label:this.state.eventName,description:this.state.eventDescription,point:point,photos:photos,videos:videos};
+          let token=await AsyncStorage.getItem('token');                 
+          let Data=await this.addEvent(token,event);
+          this.setState({
+            events:Data.route.events,
+            media:[],
+            eventModal:false
+          }); 
       }
-      addEvent(token,route) {
-            return fetch(Parametres.apiUrl+'routes/'+this.props.route._id,{
-              method: 'PUT',
+      addEvent(token,event) {
+            return fetch(Parametres.apiUrl+'routes/'+this.props.route._id+'/addEvent',{
+              method: 'POST',
               headers: {
                   'Accept': 'application/json',
                   'Content-Type': 'application/json',
                   'x-access-token':token
             },
             body: JSON.stringify({
-              type: route.type,
-              name: route.name,
-              owner:route.owner,
-              status:'active',
-              description: route.description,
-              startdate: route.startdate,
-              enddate: route.startdate,
-              events:route.events,
-              path:route.path
+              event:event
             })
             }).then((response) => response.json())
                 .then((responseJSON) => {
@@ -166,8 +151,10 @@ class trackingScreen extends Component {
 
     async uploadMedia(token,media) {
       let files= new FormData();
-      files.append('avatar', {uri: media.path, name: media.path.substr(-3)=='jpg'?'media.jpg':'media.mp4', type: media.path.substr(-3)=='jpg'?'image/jpg':'video/mp4'});
-      return fetch(Parametres.apiUrl+'upload',{
+      media.forEach(function(item, i, media) {
+        files.append('media', {uri: item.path, name:item.type=='photo'?'photo-'+(i+1)+'.jpg':'video-'+(i+1)+'.mp4', type:item.type=='photo'?'image/jpg':'video/mp4'});
+      });
+      return fetch(Parametres.apiUrl+'uploadGallery',{
               method: "post",
               headers: {
                   'Accept': 'application/json',
@@ -182,6 +169,18 @@ class trackingScreen extends Component {
                 .catch((error) => {
                   return Promise.reject(error);
                 });
+    }
+    getPhotos(media) {
+      let photos = media.filter(function(item) {
+        return item.mimetype=='image/jpg';
+      });
+      return photos;
+    }
+    getVideos(media) {
+      let videos = media.filter(function(item) {
+        return item.mimetype=='video/mp4';
+      });
+      return videos;
     }
      watchID = (null: ?number);
          componentDidMount = () => {
