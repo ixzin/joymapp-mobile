@@ -152,7 +152,9 @@ class trackingScreen extends Component {
     async uploadMedia(token,media) {
       let files= new FormData();
       media.forEach(function(item, i, media) {
-        files.append('media', {uri: item.path, name:item.type=='photo'?'photo-'+(i+1)+'.jpg':'video-'+(i+1)+'.mp4', type:item.type=='photo'?'image/jpg':'video/mp4'});
+        let timestamp=new Date();
+        let fileIndex=timestamp.getFullYear()+'_'+(+timestamp.getMonth()+1)+'_'+timestamp.getDate()+'-'+timestamp.getHours()+'_'+timestamp.getMinutes()+'_'+timestamp.getSeconds();
+        files.append('media', {uri: item.path, name:item.type=='photo'?'photo-'+fileIndex+'_no'+(i+1)+'.jpg':'video-'+fileIndex+'_no'+(i+1)+'.mp4', type:item.type=='photo'?'image/jpg':'video/mp4'});
       });
       return fetch(Parametres.apiUrl+'uploadGallery',{
               method: "post",
