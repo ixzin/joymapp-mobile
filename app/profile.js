@@ -17,6 +17,7 @@ import DatePicker from 'react-native-datepicker';
 import  mainStyles from './styles';
 import Parametres from './params';
 import Icon from './icon'; 
+import ImagePicker from 'react-native-image-picker';
 
 class profileScreen extends Component {
 	   constructor(props) {
@@ -25,6 +26,7 @@ class profileScreen extends Component {
 	        firstname:this.props.user.firstname,
 	        lastname:this.props.user.lastname,
 	        email:this.props.user.email,
+	        userId:this.props.user._id,
 	        login:this.props.user.login,
 	        password:'',
 	        avatar:this.props.user.image,
@@ -35,6 +37,8 @@ class profileScreen extends Component {
 	        errorMessage:false
 	    };
 	  }
+
+
 	  componentWillMount(){
 		AsyncStorage.getItem('social')
         .then( (value) =>{
@@ -86,6 +90,62 @@ class profileScreen extends Component {
 	    	this.setState({errorMessage:'Please fill correct all fields'});
 	    }
 	  }
+
+	  async changeAvatar() {
+	  	let token=await AsyncStorage.getItem('token');
+	  	let userId=this.state.userId;
+	  	ImagePicker.showImagePicker((response) => {
+	  		if (response.path) {	 
+        		this.uploadMedia(token,response.uri,userId).then(function(response) {	
+          				this.updateAvatar(token,response.file.path,userId).then(function(response) {
+          					refreshUserImage(userId);
+          				});
+                 });
+	  		}
+		});
+			updateAvatar=(token,file,userid)=>{
+				return fetch(Parametres.apiUrl+'users/'+userId+'/addImage',{
+				    method: "post",
+				    headers: {
+				        'Accept': 'application/json',
+	               	    'Content-Type': 'application/json',
+				        'x-access-token':token
+				         },
+				    body: JSON.stringify({picture:file})
+				   	}).then((response) => response.json())
+				        .then((responseJSON) => {
+				            this.setState({avatar:responseJSON})
+				                console.log(responseJSON);	
+				                return Promise.resolve(responseJSON);  
+				        })
+				        .catch((error) => {
+				            return Promise.reject(error);
+				        });			          	
+		  	}
+		  	refreshUserImage=(id)=> {
+		  		this.setState({avatar:'/data/users/'+id+'/avatar.jpg'});
+		  		this.props.user.image='/data/users/'+id+'/avatar.jpg';
+		  	}
+		}
+	  async uploadMedia(token,media) {
+      	let file= new FormData();
+      	file.append('avatar',{uri: media, name:'avatar.jpg',type:'image/jpg'});
+      	return fetch(Parametres.apiUrl+'upload',{
+              method: "post",
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type' : 'multipart/form-data',
+                  'x-access-token':token
+            },
+            body:file
+            }).then((response) => response.json())
+                .then((responseJSON) => {
+                  return Promise.resolve(responseJSON);  
+                })
+                .catch((error) => {
+                  return Promise.reject(error);
+                });
+     }
 	  validate= (arg,length)=> {
 	  	  if (!arg&&arg==this.state.password)
 	  	  	return true;
@@ -112,11 +172,13 @@ class profileScreen extends Component {
           			<ScrollView>
 		          		<View style={styles.contentWrapper}>
 		          			<Text style={styles.header}>Edit user profile</Text>
-		          			<View style={{flex:1,flexDirection:'row'}}>
-		          				<Text style={styles.label}>Avatar:&nbsp;</Text>
-		          				<Image style={{width:100,height:100}} source={{uri: this.props.user.image?(Parametres.url+this.props.user.image):(Parametres.url+'img/avatar.png')}}/>
-		          				<Icon name="Edit" width="20" height="20" fill='black'/>
-		          			</View>
+		          			<TouchableWithoutFeedback onPress={()=>this.changeAvatar()} >
+			          			<View style={{flex:1,flexDirection:'row'}}>
+			          				<Text style={styles.label}>Avatar:&nbsp;</Text>
+			          				<Image style={{width:100,height:100,borderRadius:50}} source={{uri: this.state.avatar?(Parametres.url+this.state.avatar):(Parametres.url+'img/avatar.png')}}/>		
+			          				<Icon name="Edit" width="20" height="20" fill='black'/>		          						
+		          				</View>
+		          			</TouchableWithoutFeedback>
 		          			<View style={styles.row}>
 		          				<Text style={styles.label}>Firstname:&nbsp;</Text>
 		          				<TextInput

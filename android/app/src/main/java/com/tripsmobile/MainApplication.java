@@ -18,6 +18,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.horcrux.svg.SvgPackage;
+import com.imagepicker.ImagePickerPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +49,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNGoogleSignInPackage(),
             new RCTCameraPackage(),
             new SvgPackage(),
-            new MapsPackage()
+            new MapsPackage(),
+            new ImagePickerPackage()
       );
     }
   };

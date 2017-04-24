@@ -27,6 +27,7 @@
 		E5B1BDF629F34C81976650CF /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F16FD49358847FDAECD8217 /* libAirMaps.a */; };
 		EEA31EFC2F01448B924E51F3 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FF6E88C87394850B6057A7D /* libRCTCamera.a */; };
 		5800540E62DA45738F0149AD /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 129CABCEB33044A39E117DA1 /* libRCTFBSDK.a */; };
+		2D87A0CB57E2492B82E06029 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EBF0A0007D34F79A21F41B0 /* libRNImagePicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -154,6 +155,8 @@
 		9FF6E88C87394850B6057A7D /* libRCTCamera.a */ = {isa = PBXFileReference; name = "libRCTCamera.a"; path = "libRCTCamera.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		1A75348682364968B87FEBB1 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; name = "RCTFBSDK.xcodeproj"; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		129CABCEB33044A39E117DA1 /* libRCTFBSDK.a */ = {isa = PBXFileReference; name = "libRCTFBSDK.a"; path = "libRCTFBSDK.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		5983DAA616B641B1BE444C4D /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		1EBF0A0007D34F79A21F41B0 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +187,7 @@
 				E5B1BDF629F34C81976650CF /* libAirMaps.a in Frameworks */,
 				EEA31EFC2F01448B924E51F3 /* libRCTCamera.a in Frameworks */,
 				5800540E62DA45738F0149AD /* libRCTFBSDK.a in Frameworks */,
+				2D87A0CB57E2492B82E06029 /* libRNImagePicker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +324,7 @@
 				0F7024DE8E8B40A6B335213D /* AirMaps.xcodeproj */,
 				6BB23BAE41ED4B44B1A282FE /* RCTCamera.xcodeproj */,
 				1A75348682364968B87FEBB1 /* RCTFBSDK.xcodeproj */,
+				5983DAA616B641B1BE444C4D /* RNImagePicker.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -655,6 +660,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -671,6 +677,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tripsMobile.app/tripsMobile";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -756,6 +763,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-maps\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -800,6 +808,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-maps\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
