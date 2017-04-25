@@ -10,6 +10,7 @@ import {
   Picker,
   TextInput,
   ScrollView,
+  Switch,
   View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -30,6 +31,7 @@ class routeScreen extends Component {
       type:this.props.route.type,
       description:this.props.route.description,
       status:this.props.route.status,
+      avatar:this.props.route.thumb,
       dateNow:formatCurrentDate,
       startDate:this.props.route.startdate.split('T')[0],
       endDate:this.props.route.enddate.split('T')[0]
@@ -87,6 +89,7 @@ class routeScreen extends Component {
               name: this.state.name,
               owner:this.props.route.owner,
               status:this.state.status,
+              thumb:this.state.avatar,
               description: this.state.description,
               startdate: this.state.startDate,
               enddate: this.state.endDate,
@@ -114,7 +117,7 @@ class routeScreen extends Component {
                 </View>  
               </TouchableWithoutFeedback>
             <View style={styles.contentWrapper}>            
-              <Image style={{width:150,height:150,borderRadius:75}} source={{uri: this.props.route.thumb?(Parametres.url+'data/routes/'+this.props.route._id+'/'+this.props.route.thumb):(Parametres.url+'img/avatar.png')}}/>
+              <Image style={{width:150,height:150,borderRadius:75}} source={{uri: this.state.avatar?(Parametres.url+'data/routes/'+this.props.route._id+'/'+this.state.avatar):(Parametres.url+'img/avatar.png')}}/>
               {renderIf(!this.state.editMode, 
                 <View>
                   <Text style={styles.header}>{this.state.name}</Text>
@@ -164,14 +167,13 @@ class routeScreen extends Component {
                       numberOfLines={4}
                       onChangeText={(description) => this.setState({description})}
                       />
-                      <Picker
-                      selectedValue={this.state.status}
-                      style={{height:40,minWidth:200,color:'black',borderBottomWidth:2,borderColor:'black'}}
-                      onValueChange={(status) => this.setState({status})}>
-                        <Picker.Item label="Choose type" value=""/>
-                        <Picker.Item label="active" value="active"/>
-                        <Picker.Item label="planned" value="planned" />
-                    </Picker>
+                      <View style={styles.dateWrapper}>
+                        <Text style={{color:'black',fontSize:18,width:150}}>{this.state.status=='hidden'?'Show':'Hide'}</Text>
+                        <Switch
+                          onValueChange={(value) => this.setState({status: value?'planned':'hidden'})}
+                          style={{width:50,height:30}}
+                          value={this.state.status=='hidden'?false:true} />
+                      </View>  
                     <View style={styles.dateWrapper}>
                       <Text style={styles.text}>Start date</Text>
                       <DatePicker
