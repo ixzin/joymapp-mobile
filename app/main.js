@@ -84,7 +84,7 @@ class mainScreen extends Component {
           <View>
           {renderIf(!this.state.changeRoute,
           <TouchableHighlight onPress={()=>this.getRoutes(this.props.user._id)} style={mainStyles.menuButton}>
-              <Text style={{color:'white',textAlign:'center'}}>Start tracking</Text>
+              <Text style={{color:'white',textAlign:'center'}}>Routes, tracking</Text>
           </TouchableHighlight>
           )}
           {renderIf(this.state.loader, 

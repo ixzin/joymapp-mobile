@@ -19,7 +19,6 @@ import Icon from './icon';
 import  mainStyles from './styles';
 import Parametres from './params';
 
-
 class routeScreen extends Component {
   constructor(props) {
     super(props);
@@ -35,6 +34,38 @@ class routeScreen extends Component {
       startDate:this.props.route.startdate.split('T')[0],
       endDate:this.props.route.enddate.split('T')[0]
     }
+  }
+  facebookShareLink=()=> {
+    const FBSDK = require('react-native-fbsdk');
+    const {
+      ShareDialog
+    } = FBSDK;
+    let link=Parametres.url+'routes/'+this.props.route._id;
+    const shareLinkContent = {
+         contentType: 'link',
+        contentUrl:link,
+        contentDescription: this.props.route.description,
+    };
+    this.state = {shareLinkContent: shareLinkContent,};
+    let tmp = this;
+    ShareDialog.canShow(this.state.shareLinkContent).then(
+        function(canShow) {
+          if (canShow) {
+            return ShareDialog.show(tmp.state.shareLinkContent);
+          }
+        }
+      ).then(
+        function(result) {
+          if (result.isCancelled) {
+            console.log('Share cancelled');
+          } else {
+            console.log('Share success with postId: ' + result.postId);
+          }
+        },
+        function(error) {
+          console.log('Share fail with error: ' + error);
+        }
+      );
   }
   async goToRoute() {
       let token=await AsyncStorage.getItem('token');
@@ -92,7 +123,13 @@ class routeScreen extends Component {
                   <Text style={styles.text}>Status:&nbsp;{this.state.status}</Text>
                   <Text style={styles.text}>Start date:&nbsp;{this.state.startDate}</Text>
                   <Text style={styles.text}>End date:{this.state.endDate}</Text>
-                  <View style={styles.contentWrapper}>       
+                  <View style={styles.contentWrapper}>
+                    <TouchableHighlight onPress={()=>this.facebookShareLink()} style={styles.facebookButton}>
+                        <View>
+                            <Icon name="Facebook" width="20" height="20" fill="#fff"/>
+                            <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Facebook share</Text>
+                        </View>
+                    </TouchableHighlight>       
                     <TouchableHighlight onPress={()=>this.goToRoute()} style={mainStyles.Button}>
                       <Text style={{color:'white',textAlign:'center'}}>Go!</Text>
                     </TouchableHighlight>        
@@ -243,6 +280,14 @@ const styles = StyleSheet.create({
     width:200,
     height:40,
     marginBottom:20
+  },
+    facebookButton:{
+      backgroundColor:'#3b5998',
+      padding:10,
+      zIndex:2,
+      width:200,
+      height:40,
+      marginBottom:10
   },
   dateInput:{
     height:40,
