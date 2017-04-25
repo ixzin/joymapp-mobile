@@ -10,6 +10,7 @@ import {
   Picker,
   TextInput,
   ScrollView,
+  Linking,
   Switch,
   View
 } from 'react-native';
@@ -68,6 +69,11 @@ class routeScreen extends Component {
           console.log('Share fail with error: ' + error);
         }
       );
+  }
+  twitterShareLink=()=>{
+    let link=Parametres.url+'routes/'+this.props.route._id;
+    let url='http://www.twitter.com/share?url='+link;
+    Linking.openURL(url).catch(err => console.error('An error occurred', err));
   }
   async goToRoute() {
       let token=await AsyncStorage.getItem('token');
@@ -132,7 +138,13 @@ class routeScreen extends Component {
                             <Icon name="Facebook" width="20" height="20" fill="#fff"/>
                             <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Facebook share</Text>
                         </View>
-                    </TouchableHighlight>       
+                    </TouchableHighlight>    
+                    <TouchableHighlight onPress={()=>this.twitterShareLink()} style={styles.twitterButton}>
+                        <View>
+                            <Icon name="Twitter" width="20" height="20" fill="#fff"/>
+                            <Text style={{color:'white',textAlign:'center',position:'absolute',paddingLeft:30}}>Twitter share</Text>
+                        </View>
+                    </TouchableHighlight>      
                     <TouchableHighlight onPress={()=>this.goToRoute()} style={mainStyles.Button}>
                       <Text style={{color:'white',textAlign:'center'}}>Go!</Text>
                     </TouchableHighlight>        
@@ -283,13 +295,21 @@ const styles = StyleSheet.create({
     height:40,
     marginBottom:20
   },
-    facebookButton:{
-      backgroundColor:'#3b5998',
-      padding:10,
-      zIndex:2,
-      width:200,
-      height:40,
-      marginBottom:10
+  facebookButton:{
+    backgroundColor:'#3b5998',
+    padding:10,
+    zIndex:2,
+    width:200,
+    height:40,
+    marginBottom:10
+  },
+  twitterButton:{
+    backgroundColor:'#4099FF',
+    padding:10,
+    zIndex:2,
+    width:200,
+    height:40,
+    marginBottom:10
   },
   dateInput:{
     height:40,
