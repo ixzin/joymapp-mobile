@@ -83,7 +83,7 @@ class routeScreen extends Component {
                 </View>  
               </TouchableWithoutFeedback>
             <View style={styles.contentWrapper}>            
-              <Image style={{width:150,height:150,borderRadius:75}} source={{uri: this.props.route.thum?(Parametres.url+'data/routes/'+this.props.route._id+'/'+this.props.route.thumb):(Parametres.url+'img/avatar.png')}}/>
+              <Image style={{width:150,height:150,borderRadius:75}} source={{uri: this.props.route.thumb?(Parametres.url+'data/routes/'+this.props.route._id+'/'+this.props.route.thumb):(Parametres.url+'img/avatar.png')}}/>
               {renderIf(!this.state.editMode, 
                 <View>
                   <Text style={styles.header}>{this.state.name}</Text>
