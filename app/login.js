@@ -202,7 +202,7 @@ class loginScreen extends Component {
               <View style={mainStyles.Mask}></View>
               <Image style={mainStyles.background} source={require('../img/intro.jpg')}/>
                 <View style={styles.loginForm}>
-                        <Text style={mainStyles.header}>Titile</Text>
+                        <Text style={mainStyles.header}>JoyMapp</Text>
                         <TextInput
                           style={mainStyles.input}
                           placeholder="Login"
