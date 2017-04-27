@@ -1,4 +1,4 @@
-package com.tripsmobile;
+package com.joymapp;
 
 import android.app.Application;
 import android.util.Log;
