@@ -101,7 +101,7 @@ class mainScreen extends Component {
                       <View style={styles.routeContainer}>
                         <Image  style={styles.routeIcon} source={{uri: Parametres.url+'data/routes/'+route._id+'/thumb.jpg'}}/>
                         <Text style={styles.routeNameCell}>{route.name}</Text>
-                        <Text style={styles.routeStatusCell}>{route.status}</Text>
+                        <Text style={styles.routeStatusCell}>{Parametres.statuses[route.status]}</Text>
                       </View>
                     </TouchableWithoutFeedback>
                   );

@@ -35,7 +35,7 @@ class routeCreationScreen extends Component {
      }
    }
    async goToRoute() {
-    if (this.validate(this.state.name,6)&&this.validate(this.state.type,4)) {
+    if (this.validate(this.state.name,6)) {
       let token=await AsyncStorage.getItem('token');
       let userFromStorage=await AsyncStorage.getItem('user');
       let user=JSON.parse(userFromStorage);
@@ -44,7 +44,6 @@ class routeCreationScreen extends Component {
           Actions.tracking({route:routeInfo,user:user});
          });
       } else {
-        this.setState({errorType: !this.validate(this.state.type,4)});
         this.setState({errorName: !this.validate(this.state.name,6)});
         this.setState({errorMessage:'Please fill correct all fields'});
       }
@@ -66,7 +65,7 @@ class routeCreationScreen extends Component {
           type: this.state.type,
           name: this.state.name,
           owner:id,
-          status:'planned',
+          status:1,
           description: this.state.description,
           startdate: this.state.startDate,
           enddate: this.state.endDate
@@ -99,12 +98,12 @@ class routeCreationScreen extends Component {
                   style={{height:60,minWidth:200,marginTop:0,marginBottom:10,color:'white'}}
                   onValueChange={(type) => this.setState({type: type})}>
                   <Picker.Item label="Choose type" value=""/>
-                  <Picker.Item label="hike" value="trip"/>
-                  <Picker.Item label="marine" value="marine" />
-                  <Picker.Item label="auto" value="auto" />
-                  <Picker.Item label="city" value="city" />
-                  <Picker.Item label="extreme" value="extreme" />
-                  <Picker.Item label="event" value="event" />
+                  <Picker.Item label="hike" value="2"/>
+                  <Picker.Item label="marine" value="4" />
+                  <Picker.Item label="auto" value="1" />
+                  <Picker.Item label="city" value="3" />
+                  <Picker.Item label="extreme" value="5" />
+                  <Picker.Item label="event" value="6" />
                 </Picker>
               </View>
               <TextInput

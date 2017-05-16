@@ -6,7 +6,9 @@ Dimensions
 const Parametres = {
 	url:'http://teethemes.com:3000/',
 	apiUrl:'http://teethemes.com:3000/api/',
-	resolution:Dimensions.get('window')
+	resolution:Dimensions.get('window'),
+	types:['auto','hike','city','marine','extreme','event'],
+	statuses:['disabled','active','planned','published']
  };
 
 export default Parametres;
