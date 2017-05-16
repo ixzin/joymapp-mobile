@@ -392,7 +392,7 @@ class trackingScreen extends Component {
                       <TouchableHighlight onPress={()=>this.setState({active:!this.state.active})} style={this.state.active?mainStyles.menuButton:styles.pauseButton}>
                           <Text style={{color:'white',textAlign:'center'}}>{this.state.active?'Pause':'Resume'}</Text>
                       </TouchableHighlight>
-                      <TouchableHighlight onPress={()=>Actions.main({user:this.props.user})} style={mainStyles.menuButton}>
+                      <TouchableHighlight onPress={()=>{this.setState({active:false});Actions.main({user:this.props.user})}} style={mainStyles.menuButton}>
                         <Text style={{color:'white',textAlign:'center'}}>Close</Text>
                       </TouchableHighlight>  
                     </View>
