@@ -8,7 +8,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:475393374483:android:2a1aa452e2faf48b",
         "android_client_info": {
-          "package_name": "tripsMobile.apk"
+          "package_name": "JoyMapp.apk"
         }
       },
       "oauth_client": [
@@ -16,7 +16,7 @@
           "client_id": "475393374483-13s3pojkp98fnhab1b4fs0sm8ji18sua.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "tripsMobile.apk",
+            "package_name": "JoyMapp.apk",
             "certificate_hash": "1505783f8e54b342a0a97f6f429a1e71d6a200fd"
           }
         },
@@ -47,7 +47,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:475393374483:android:171a0cb0f0af3305",
         "android_client_info": {
-          "package_name": "com.tripsmobile"
+          "package_name": "com.joymapp"
         }
       },
       "oauth_client": [
@@ -55,7 +55,7 @@
           "client_id": "475393374483-kb2qjfp18t5308ec9t6t6ckjrrerslst.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.tripsmobile",
+            "package_name": "com.joymapp",
             "certificate_hash": "1505783f8e54b342a0a97f6f429a1e71d6a200fd"
           }
         },
