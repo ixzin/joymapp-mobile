@@ -362,8 +362,8 @@ class trackingScreen extends Component {
                           style={{height:Parametres.resolution.height*0.5,width:Parametres.resolution.width*0.85}}
                           showsUserLocation={true}
                           initialRegion={{
-                            latitude: this.state.lastPosition[0],
-                            longitude:this.state.lastPosition[1],
+                            latitude: +this.state.lastPosition[0],
+                            longitude:+this.state.lastPosition[1],
                             latitudeDelta: 0.0922,
                             longitudeDelta: 0.0421,
                           }}
@@ -373,9 +373,7 @@ class trackingScreen extends Component {
                         >
                             <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
                         </MapView>
-                        <Text style={{width:0,height:0}}>
-                          {this.state.lastPosition[0]}, {this.state.lastPosition[1]}
-                        </Text>
+           
                      </View>
                      )}
                      {renderIf(this.state.route.length==0&&this.state.lastPosition=='undefined',
