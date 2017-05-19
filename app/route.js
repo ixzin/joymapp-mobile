@@ -19,6 +19,8 @@ import DatePicker from 'react-native-datepicker';
 import renderIf from './renderif';
 import Icon from './icon'; 
 import  mainStyles from './styles';
+import MapView from 'react-native-maps';
+import mapStyles from './mapStyles';
 import Parametres from './params';
 
 class routeScreen extends Component {
@@ -26,16 +28,37 @@ class routeScreen extends Component {
     super(props);
     let currentDate=new Date();
     let formatCurrentDate=currentDate.getFullYear()+'-'+(currentDate.getMonth()+1)+'-'+currentDate.getDate();
+    this.mapRef = null;
     this.state={
       editMode:false,
       name:this.props.route.name,
       type:this.props.route.type,
+      route:this.transformToPath(this.props.route.path),
+      mapStyle:mapStyles,
       description:this.props.route.description,
       status:this.props.route.status,
       avatar:this.props.route.thumb,
       dateNow:formatCurrentDate,
       startDate:this.props.route.startdate.split('T')[0],
-      endDate:this.props.route.enddate.split('T')[0]
+      endDate:this.props.route.enddate.split('T')[0],
+      formattedStartDate:this.dateConvert(this.props.route.startdate),
+      formattedEndDate:this.dateConvert(this.props.route.enddate)
+    }
+  }
+  dateConvert(date) {
+    let options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
+    let fullDate=new Date(date);
+    return fullDate.toLocaleString('en-US', options);
+  }
+  transformToPath=(path)=>{   
+    if (path.length>=2) {
+      let route=[];
+      for (let i=0;i<path.length;i++) {
+        route[i]={latitude:path[i][0],longitude:path[i][1]};
+      }
+    return route;
+    } else {
+      return null;
     }
   }
   facebookShareLink=()=> {
@@ -117,6 +140,9 @@ class routeScreen extends Component {
         <View style={mainStyles.container}>
           <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
           <ScrollView>
+                 <View  style={{position:'absolute',top:20,left:20}}>
+                    <Text style={styles.text}>{Parametres.statuses[this.state.status-1]}</Text>
+                 </View>
             <TouchableWithoutFeedback onPress={()=>this.setState({editMode:!this.state.editMode})}>
                 <View  style={{position:'absolute',top:20,right:20}}>
                     <Icon name="Edit" width="20" height="20" fill={this.state.editMode?'#ea2e49':'black'}/>
@@ -127,11 +153,15 @@ class routeScreen extends Component {
               {renderIf(!this.state.editMode, 
                 <View>
                   <Text style={styles.header}>{this.state.name}</Text>
-                  <Text style={styles.text}>Type:&nbsp;{this.state.type}</Text>
+                  <Text style={{color:'black',textAlign:'center',marginBottom:10}}>{this.state.formattedStartDate}&mdash;{this.state.formattedEndDate}</Text>
+                   <MapView
+                      style={{height:Parametres.resolution.height*0.5,width:Parametres.resolution.width*0.85,marginBottom:10}}                         
+                      ref={(ref) => { this.mapRef = ref }}
+                      onLayout = {() => this.mapRef.fitToCoordinates(this.state.route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false })}
+                      customMapStyle={this.state.mapStyle}>
+                        <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
+                  </MapView>
                   <Text style={styles.text}>{this.state.description}</Text>
-                  <Text style={styles.text}>Status:&nbsp;{this.state.status}</Text>
-                  <Text style={styles.text}>Start date:&nbsp;{this.state.startDate}</Text>
-                  <Text style={styles.text}>End date:{this.state.endDate}</Text>
                   <View style={styles.contentWrapper}>
                     <TouchableHighlight onPress={()=>this.facebookShareLink()} style={styles.facebookButton}>
                         <View>
@@ -164,12 +194,12 @@ class routeScreen extends Component {
                       style={{height:40,minWidth:200,color:'black',borderBottomWidth:2,borderColor:'black'}}
                       onValueChange={(type) => this.setState({type})}>
                       <Picker.Item label="Choose type" value=""/>
-                      <Picker.Item label="hike" value="trip"/>
-                      <Picker.Item label="marine" value="marine" />
-                      <Picker.Item label="auto" value="auto" />
-                      <Picker.Item label="city" value="city" />
-                      <Picker.Item label="extreme" value="extreme" />
-                      <Picker.Item label="event" value="event" />
+                      <Picker.Item label="hike" value="2"/>
+                      <Picker.Item label="marine" value="4" />
+                      <Picker.Item label="car" value="1" />
+                      <Picker.Item label="city" value="3" />
+                      <Picker.Item label="extreme" value="5" />
+                      <Picker.Item label="event" value="6" />
                     </Picker>
                      <TextInput
                       value={this.state.description}
@@ -180,11 +210,11 @@ class routeScreen extends Component {
                       onChangeText={(description) => this.setState({description})}
                       />
                       <View style={styles.dateWrapper}>
-                        <Text style={{color:'black',fontSize:18,width:150}}>{this.state.status=='hidden'?'Show':'Hide'}</Text>
+                        <Text style={{color:'black',fontSize:18,width:150}}>{this.state.status==0?'Show':'Hide'}</Text>
                         <Switch
-                          onValueChange={(value) => this.setState({status: value?'planned':'hidden'})}
+                          onValueChange={(value) => this.setState({status: value?2:0})}
                           style={{width:50,height:30}}
-                          value={this.state.status=='hidden'?false:true} />
+                          value={this.state.status==0?false:true} />
                       </View>  
                     <View style={styles.dateWrapper}>
                       <Text style={styles.text}>Start date</Text>
@@ -237,7 +267,7 @@ class routeScreen extends Component {
                                   marginBottom:20
                                 }
                               }}
-                              onDateChange={(endtDate) => {this.setState({endtDate: endtDate})}}
+                              onDateChange={(endDate) => {this.setState({endDate: endDate})}}
                             />
                       </View>      
                   <TouchableHighlight onPress={()=>this.setState({editMode:false})} style={styles.Button}>
