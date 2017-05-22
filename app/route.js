@@ -35,6 +35,7 @@ class routeScreen extends Component {
       type:this.props.route.type,
       route:this.transformToPath(this.props.route.path),
       mapStyle:mapStyles,
+      events:this.props.route.events?this.props.route.events:[],
       description:this.props.route.description,
       status:this.props.route.status,
       avatar:this.props.route.thumb,
@@ -48,7 +49,7 @@ class routeScreen extends Component {
   dateConvert(date) {
     let options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
     let fullDate=new Date(date);
-    return fullDate.toLocaleString('en-US', options);
+    return fullDate.toLocaleDateString('en-US', options);
   }
   transformToPath=(path)=>{   
     if (path.length>=2) {
@@ -160,6 +161,15 @@ class routeScreen extends Component {
                       onLayout = {() => this.mapRef.fitToCoordinates(this.state.route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false })}
                       customMapStyle={this.state.mapStyle}>
                         <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
+                        {this.state.events.map((marker,i) => (
+                          <MapView.Marker
+                            coordinate={{latitude:marker.point[0],longitude:marker.point[1]}}
+                            title={marker.label}
+                            description={marker.description}
+                            image={require('../img/marker.png')}
+                            key={i}
+                          />
+                        ))}
                   </MapView>
                   <Text style={styles.text}>{this.state.description}</Text>
                   <View style={styles.contentWrapper}>
