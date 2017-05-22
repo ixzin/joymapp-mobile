@@ -142,7 +142,7 @@ class routeScreen extends Component {
           <Image style={mainStyles.background} source={require('../img/pattern.png')}/>
           <ScrollView>
                  <View  style={{position:'absolute',top:20,left:20}}>
-                    <Text style={styles.text}>{Parametres.statuses[this.state.status-1]}</Text>
+                    <Text style={styles.text}>{Parametres.statuses[this.state.status]}</Text>
                  </View>
             <TouchableWithoutFeedback onPress={()=>this.setState({editMode:!this.state.editMode})}>
                 <View  style={{position:'absolute',top:20,right:20}}>
