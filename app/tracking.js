@@ -25,7 +25,6 @@ class trackingScreen extends Component {
     super(props);
     this.mapRef = null;
     this.state = {
-      lastPosition:'undefined',
       route: this.props.route.path?this.convertPoints(this.props.route.path):[],
       points:this.props.route.path?this.props.route.path:[],
       events:this.props.route.events?this.props.route.events:[],
@@ -44,14 +43,11 @@ class trackingScreen extends Component {
 
    /*convertPoints*/
    convertPoints(path) {
-    let coordinates=[];
-    for (let i=0;i<path.length;i++) {
-      coordinates=coordinates.concat([{
-        latitude:path[i][0],
-        longitude:path[i][1]
-      }]);
-    } 
-    return coordinates;
+    let route=[];
+      for (let i=0;i<path.length;i++) {
+        route[i]={latitude:path[i][0],longitude:path[i][1]};
+      }
+    return route;
    }
 
      takePicture=()=> {
@@ -190,15 +186,15 @@ class trackingScreen extends Component {
           let points=this.state.points;
             this.watchID = navigator.geolocation.watchPosition((position) => {
               if (this.state.active) {
-                 let lastPosition =[position.coords.latitude,position.coords.longitude];                           
-                 this.setState({lastPosition});
-                 let positionCoordinate=[{latitude:this.state.lastPosition[0],longitude:this.state.lastPosition[1]}];  
+                 let lastPosition =[position.coords.latitude,position.coords.longitude];                  
+                 let positionCoordinate=[{latitude:lastPosition[0],longitude:lastPosition[1]}];  
                  route=route.concat(positionCoordinate);
                  points.push(lastPosition);
-                 console.log(points);
                  this.setState({route}); 
                  this.setState({points});  
-                 if (route.length>2) {
+                 console.log(this.mapRef);
+                 if (route.length>=2) {
+                    this.mapRef.fitToCoordinates(route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false });
                     this.saveRoute().then(function(response) {
                     console.log(response);
                    });
@@ -207,6 +203,7 @@ class trackingScreen extends Component {
             });           
          }
          componentWillUnmount = () => {
+            this.setState({route:[]});
             navigator.geolocation.clearWatch(this.watchID);
          }
          async saveRoute() {
@@ -356,19 +353,18 @@ class trackingScreen extends Component {
                       </View>
                      </ScrollView> 
                   </Modal>
-                  {renderIf(this.state.route.length!=0&&this.state.lastPosition!='undefined',
+                  {renderIf(this.state.route[0],
                     <View style={styles.mapWrapper}>   
                       <MapView
                           style={{height:Parametres.resolution.height*0.5,width:Parametres.resolution.width*0.85}}
                           showsUserLocation={true}
                           initialRegion={{
-                            latitude: +this.state.lastPosition[0],
-                            longitude:+this.state.lastPosition[1],
-                            latitudeDelta: 0.0922,
-                            longitudeDelta: 0.0421,
-                          }}
+                             latitude: this.state.route[0]?+this.state.route[0]['latitude']:null,
+                             longitude:this.state.route[0]?+this.state.route[0]['longitude']:null,
+                             latitudeDelta: 0.0922,
+                             longitudeDelta: 0.0421,
+                           }}
                           ref={(ref) => { this.mapRef = ref }}
-                          onLayout = {() => this.mapRef.fitToCoordinates(this.state.route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false })}
                           customMapStyle={this.state.mapStyle }
                         >
                             <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
@@ -376,7 +372,7 @@ class trackingScreen extends Component {
            
                      </View>
                      )}
-                     {renderIf(this.state.route.length==0&&this.state.lastPosition=='undefined',
+                     {renderIf(!this.state.route[0],
                      <View style={{paddingTop:40,paddingBottom:40,margin:10}}>
                         <Image style={{width:50,height:50}} source={require('../img/loader.gif')}/>
                         <Text style={{color:'#ea2e49',fontSize:16,textAlign:'center'}}>Map is loading. It could take some time. Geolocation must be turned on for your device</Text>

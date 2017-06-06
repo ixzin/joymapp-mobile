@@ -43,8 +43,8 @@ class introScreen extends Component {
                       ]
                   ],
                   "startdate": "2018-04-13",
-                  "status" : "planned",
-                  "type" : "trip"
+                  "status" : 2,
+                  "type" : 2
               }
             Actions.tracking({route:routeInfo,user:userObj});*/
             } else{
