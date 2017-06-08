@@ -30,6 +30,7 @@ class trackingScreen extends Component {
       events:this.props.route.events?this.props.route.events:[],
       timer:0,
       active:true,
+      tracking:false,
       zoom:false,
       showMap:false,
       mapStyle:mapStyles,
@@ -185,6 +186,7 @@ class trackingScreen extends Component {
           let route=this.state.route;
           let points=this.state.points;
             this.watchID = navigator.geolocation.watchPosition((position) => {
+              this.setState({tracking:true});
               if (this.state.active) {
                  let lastPosition =[position.coords.latitude,position.coords.longitude];                  
                  let positionCoordinate=[{latitude:lastPosition[0],longitude:lastPosition[1]}];  
@@ -192,7 +194,6 @@ class trackingScreen extends Component {
                  points.push(lastPosition);
                  this.setState({route}); 
                  this.setState({points});  
-                 console.log(this.mapRef);
                  if (route.length>=2) {
                     this.mapRef.fitToCoordinates(route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false });
                     this.saveRoute().then(function(response) {
@@ -353,7 +354,7 @@ class trackingScreen extends Component {
                       </View>
                      </ScrollView> 
                   </Modal>
-                  {renderIf(this.state.route[0],
+                  {renderIf(this.state.tracking,
                     <View style={styles.mapWrapper}>   
                       <MapView
                           style={{height:Parametres.resolution.height*0.5,width:Parametres.resolution.width*0.85}}
@@ -372,7 +373,7 @@ class trackingScreen extends Component {
            
                      </View>
                      )}
-                     {renderIf(!this.state.route[0],
+                     {renderIf(!this.state.tracking,
                      <View style={{paddingTop:40,paddingBottom:40,margin:10}}>
                         <Image style={{width:50,height:50}} source={require('../img/loader.gif')}/>
                         <Text style={{color:'#ea2e49',fontSize:16,textAlign:'center'}}>Map is loading. It could take some time. Geolocation must be turned on for your device</Text>
@@ -386,7 +387,7 @@ class trackingScreen extends Component {
                       <TouchableHighlight onPress={()=>this.setState({active:!this.state.active})} style={this.state.active?mainStyles.menuButton:styles.pauseButton}>
                           <Text style={{color:'white',textAlign:'center'}}>{this.state.active?'Pause':'Resume'}</Text>
                       </TouchableHighlight>
-                      <TouchableHighlight onPress={()=>{this.setState({active:false});Actions.main({user:this.props.user})}} style={mainStyles.menuButton}>
+                      <TouchableHighlight onPress={()=>{Actions.main({user:this.props.user});this.setState({active:false,tracking:false})}} style={mainStyles.menuButton}>
                         <Text style={{color:'white',textAlign:'center'}}>Close</Text>
                       </TouchableHighlight>  
                     </View>

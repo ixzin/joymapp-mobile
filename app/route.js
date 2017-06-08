@@ -103,7 +103,7 @@ class routeScreen extends Component {
       let token=await AsyncStorage.getItem('token');
       let userFromStorage=await AsyncStorage.getItem('user');
       let user=JSON.parse(userFromStorage);
-      Actions.tracking({type:'replace',route:this.props.route,user:user});
+      Actions.tracking({route:this.props.route,user:user});
     }
   async updateRoute() {
       let token=await AsyncStorage.getItem('token');
