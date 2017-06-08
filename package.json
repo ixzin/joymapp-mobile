@@ -15,7 +15,7 @@
     "react-native-fbsdk": "^0.6.0",
     "react-native-google-sign-in": "0.0.14",
     "react-native-image-picker": "^0.26.3",
-    "react-native-maps": "^0.15.0",
+    "react-native-maps": "^0.15.2",
     "react-native-router-flux": "^3.39.1",
     "react-native-svg": "^5.1.8",
     "react-native-svg-icon": "^0.4.0"

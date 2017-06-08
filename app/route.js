@@ -103,7 +103,7 @@ class routeScreen extends Component {
       let token=await AsyncStorage.getItem('token');
       let userFromStorage=await AsyncStorage.getItem('user');
       let user=JSON.parse(userFromStorage);
-      Actions.tracking({route:this.props.route,user:user});
+      Actions.tracking({type:'replace',route:this.props.route,user:user});
     }
   async updateRoute() {
       let token=await AsyncStorage.getItem('token');
@@ -155,22 +155,24 @@ class routeScreen extends Component {
                 <View>
                   <Text style={styles.header}>{this.state.name}</Text>
                   <Text style={{color:'black',textAlign:'center',marginBottom:10}}>{this.state.formattedStartDate}&mdash;{this.state.formattedEndDate}</Text>
-                   <MapView
-                      style={{height:Parametres.resolution.height*0.5,width:Parametres.resolution.width*0.85,marginBottom:10}}                         
-                      ref={(ref) => { this.mapRef = ref }}
-                      onLayout = {() => this.mapRef.fitToCoordinates(this.state.route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false })}
-                      customMapStyle={this.state.mapStyle}>
-                        <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
-                        {this.state.events.map((marker,i) => (
-                          <MapView.Marker
-                            coordinate={{latitude:marker.point[0],longitude:marker.point[1]}}
-                            title={marker.label}
-                            description={marker.description}
-                            image={require('../img/marker.png')}
-                            key={i}
-                          />
-                        ))}
-                  </MapView>
+                  {renderIf(this.props.route.path.length!=0, 
+                     <MapView
+                        style={{height:Parametres.resolution.height*0.5,width:Parametres.resolution.width*0.85,marginBottom:10}}                         
+                        ref={(ref) => { this.mapRef = ref }}
+                        onLayout = {() => this.mapRef.fitToCoordinates(this.state.route, { edgePadding: { top: 10, right: 10, bottom: 10, left: 10 }, animated: false })}
+                        customMapStyle={this.state.mapStyle}>
+                          <MapView.Polyline coordinates={this.state.route} strokeColor="#ea2e49" strokeWidth={2} geodesic={true}/>
+                          {this.state.events.map((marker,i) => (
+                            <MapView.Marker
+                              coordinate={{latitude:marker.point[0],longitude:marker.point[1]}}
+                              title={marker.label}
+                              description={marker.description}
+                              image={require('../img/marker.png')}
+                              key={i}
+                            />
+                          ))}
+                    </MapView>
+                  )}
                   <Text style={styles.text}>{this.state.description}</Text>
                   <View style={styles.contentWrapper}>
                     <TouchableHighlight onPress={()=>this.facebookShareLink()} style={styles.facebookButton}>
