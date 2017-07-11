@@ -41,7 +41,7 @@ class routeCreationScreen extends Component {
       let user=JSON.parse(userFromStorage);
         this.createNewRoute(user._id,token).then(function(response) {
           let routeInfo=response.route;
-          Actions.tracking({route:routeInfo,user:user});
+          Actions.tracking({type:'reset',route:routeInfo,user:user});
          });
       } else {
         this.setState({errorName: !this.validate(this.state.name,6)});
