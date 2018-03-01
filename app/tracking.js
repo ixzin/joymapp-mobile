@@ -201,7 +201,10 @@ class trackingScreen extends Component {
                    });
                  }
               }
-            });           
+            },(error)=>{
+                console.log(error);
+            },{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 }
+            );
          }
          componentWillUnmount = () => {
             this.setState({route:[]});
